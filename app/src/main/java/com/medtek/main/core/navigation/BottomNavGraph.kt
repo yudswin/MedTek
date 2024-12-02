@@ -13,14 +13,14 @@ import com.medtek.main.core.presentation.music.MusicScreen
 import com.medtek.main.core.presentation.news.NewsScreen
 
 @Composable
-fun BottomNavGraph(navController: NavHostController, paddingValues: PaddingValues) {
+fun BottomNavGraph(navController: NavHostController, paddingValues: PaddingValues, isEmptyHabit: Boolean = false, initPage: Int) {
     NavHost(
         modifier = Modifier.padding(paddingValues),
         navController = navController,
         startDestination = BottomNavItem.Habit.route
     ) {
         composable(route = BottomNavItem.Habit.route) {
-            HabitScreen()
+            HabitScreen(isEmpty = isEmptyHabit, initialPage = initPage)
         }
         composable(route = BottomNavItem.Calendar.route) {
             CalendarScreen()

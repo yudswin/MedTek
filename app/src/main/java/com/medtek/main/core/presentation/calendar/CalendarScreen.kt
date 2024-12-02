@@ -1,7 +1,6 @@
 package com.medtek.main.core.presentation.calendar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,11 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import com.medtek.main.core.presentation.calendar.components.CalendarView
+import com.medtek.main.core.presentation.home.components.calendar.CalendarView
+import com.medtek.main.ui.theme.AppTheme
 import java.time.LocalDate
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 //@Preview
@@ -87,5 +83,15 @@ fun CalendarScreen() {
                 }
             }
         }
+    }
+}
+
+
+
+@Preview
+@Composable
+fun PreviewCalendarView() {
+    AppTheme {
+        CalendarScreen()
     }
 }

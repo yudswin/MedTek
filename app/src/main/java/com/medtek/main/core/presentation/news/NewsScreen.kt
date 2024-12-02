@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.medtek.main.core.presentation.news.components.NewsCard
 
-//@Preview
+@Preview
 @Composable
 fun NewsScreen() {
     Scaffold(
