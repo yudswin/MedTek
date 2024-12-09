@@ -1,3 +1,4 @@
+import org.gradle.kotlin.dsl.test
 
 plugins {
     id("com.google.devtools.ksp") version "2.0.0-1.0.24"
@@ -72,11 +73,14 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.accessibility.test.framework)
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.compose.ui:ui:1.7.5")
