@@ -1,11 +1,9 @@
-import org.gradle.kotlin.dsl.debug
-import org.gradle.kotlin.dsl.release
 
 plugins {
+    id("com.google.devtools.ksp") version "2.0.0-1.0.24"
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     kotlin("android")
-    kotlin("kapt")
 }
 
 android {
@@ -92,12 +90,17 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.4.0")
     implementation("androidx.compose.ui:ui-tooling-preview:1.4.2")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
+
+    // Room with KSP
     implementation(libs.room.runtime)
-    kapt(libs.room.compiler)
     implementation(libs.room.ktx)
+    ksp("androidx.room:room-compiler:2.5.0")
+
+    // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson.converter)
 }
