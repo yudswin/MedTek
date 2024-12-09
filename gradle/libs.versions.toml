@@ -14,6 +14,10 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.3"
 uiTextGoogleFonts = "1.8.0-alpha06"
+room = "2.5.0"
+retrofit = "2.9.0"
+gsonConverter = "2.9.0"
+accessibilityTestFramework = "4.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,8 +39,15 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson-converter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "gsonConverter" }
+accessibility-test-framework = { group = "com.google.android.apps.common.testing.accessibility.framework", name = "accessibility-test-framework", version.ref = "accessibilityTestFramework" }
 
 [plugins]
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt" }

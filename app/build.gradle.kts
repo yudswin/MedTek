@@ -1,7 +1,11 @@
+import org.gradle.kotlin.dsl.debug
+import org.gradle.kotlin.dsl.release
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     kotlin("android")
+    kotlin("kapt")
 }
 
 android {
@@ -23,8 +27,20 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"mongodb+srv://mobileApplication:7DIDNohssRKgsi7c@cluster0.cwr8e.mongodb.net/\""
+            )
+        }
         release {
-            isMinifyEnabled = false
+            buildConfigField(
+                "String",
+                "BASE_URL",
+                "\"mongodb+srv://mobileApplication:7DIDNohssRKgsi7c@cluster0.cwr8e.mongodb.net/\""
+            )
+            isMinifyEnabled = true // To obfuscate your code
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -36,13 +52,14 @@ android {
         targetCompatibility = JavaVersion.VERSION_18
     }
     composeOptions {
-        kotlinCompilerExtensionVersion  = libs.versions.composeCompiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
     kotlinOptions {
         jvmTarget = "18"
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -56,6 +73,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.accessibility.test.framework)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -77,4 +95,9 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson.converter)
 }
