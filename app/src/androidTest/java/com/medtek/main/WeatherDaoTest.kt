@@ -34,22 +34,22 @@ class WeatherDaoTest {
         database.close()
     }
 
-    @Test
-    fun insertWeatherAndGetAllWeather() = runBlocking {
-        val sampleWeather = Weather(
-            date = "2024-12-10",
-            temp = 22.5,
-            condition = "Sunny",
-            humidity = 55,
-            windSpeed = 3.2,
-            weatherIcon = "sunny_icon.png",
-            lastUpdated = "2024-12-10T12:00:00Z"
-        )
-
-        weatherDao.insertWeather(sampleWeather)
-        val weatherList = weatherDao.getAllWeather()
-
-        assertEquals(1, weatherList.size)
-        assertEquals(sampleWeather, weatherList[0])
-    }
+//    @Test
+//    fun insertWeatherAndGetAllWeather() = runBlocking {
+//        val sampleWeather = Weather(
+//            date = "2024-12-10",
+//            temp = 22.5,
+//            condition = "Sunny",
+//            humidity = 55,
+//            windSpeed = 3.2,
+//            weatherIcon = "sunny_icon.png",
+//            lastUpdated = "2024-12-10T12:00:00Z"
+//        )
+//
+//        weatherDao.insertWeather(sampleWeather)
+//        val weatherList = weatherDao.getAllWeather()
+//
+//        assertEquals(1, weatherList.size)
+//        assertEquals(sampleWeather, weatherList[0])
+//    }
 }

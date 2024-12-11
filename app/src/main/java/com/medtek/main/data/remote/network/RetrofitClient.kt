@@ -1,28 +1,28 @@
 package com.medtek.main.data.remote.network
 
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
 object RetrofitClient {
 
-    private const val BASE_URL =
-        "based"
+    private const val BASE_URL = "https://mobileappbe-production.up.railway.app/api/"
 
-    private val retrofit: Retrofit by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
     }
 
-    fun <T> create(service: Class<T>): T = retrofit.create(service)
+    private val okHttpClient = OkHttpClient.Builder()
+        .addInterceptor(loggingInterceptor)
+        .build()
 
-//    val weatherApi: WeatherApi by lazy {
-//        retrofit.create(WeatherApi::class.java)
-//    }
-//
-//    val quoteApi: QuoteApi by lazy {
-//        retrofit.create(QuoteApi::class.java)
-//    }
+    private val retrofit: Retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    fun <T> create(service: Class<T>): T = retrofit.create(service)
 }

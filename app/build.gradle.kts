@@ -80,6 +80,14 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    // Mockito core library
+    testImplementation("org.mockito:mockito-core:5.5.0")
+
+    // Mockito Kotlin extensions (for easier syntax with Kotlin)
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
+
+    // Mockito for Android (if required for instrumentation tests)
+    androidTestImplementation("org.mockito:mockito-android:5.5.0")
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
@@ -107,4 +115,6 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson.converter)
+
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
 }
