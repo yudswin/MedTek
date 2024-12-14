@@ -1,4 +1,4 @@
-package com.medtek.main.greeting
+package com.medtek.main.core.presentation.greeting
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -10,13 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.medtek.main.greeting.Presentation.Components.ActionBar
-import com.medtek.main.greeting.Presentation.Components.CloseBar
-import com.medtek.main.greeting.Presentation.Components.WeatherCard
-import com.medtek.main.greeting.Presentation.Components.locationText
-import com.medtek.main.greeting.Presentation.Components.quoteCard
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.Canvas
+import com.medtek.main.core.presentation.greeting.components.ActionBar
+import com.medtek.main.core.presentation.greeting.components.CloseBar
+import com.medtek.main.core.presentation.greeting.components.WeatherCard
+import com.medtek.main.core.presentation.greeting.components.locationText
+import com.medtek.main.core.presentation.greeting.components.quoteCard
 
 
 @Preview
