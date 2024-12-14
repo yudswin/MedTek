@@ -24,7 +24,7 @@ import com.medtek.main.ui.theme.AppTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-//@Preview
+@Preview
 @Composable
 fun CalendarScreen() {
     val currentDate = LocalDate.now()
