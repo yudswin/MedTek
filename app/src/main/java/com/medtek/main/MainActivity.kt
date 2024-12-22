@@ -1,35 +1,38 @@
 package com.medtek.main
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
-import com.medtek.main.core.HomeActivity
-import com.medtek.main.data.local.database.AppDatabase
-import com.medtek.main.data.local.dao.QuoteDao
-import com.medtek.main.data.local.entities.Quote
-import com.medtek.main.data.remote.network.RetrofitClient
-import com.medtek.main.data.remote.services.QuoteService
-import com.medtek.main.data.remote.services.WeatherService
-import com.medtek.main.data.repository.greeting.QuoteRepository
-import com.medtek.main.data.repository.weather.WeatherRepository
-import kotlinx.coroutines.launch
+import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.medtek.main.core.HomeScreen
+import com.medtek.main.survey.SurveyScreen
+import com.medtek.main.ui.theme.AppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var database: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContent() {
+            AppTheme() {
+                MainNavHost()
+            }
+        }
+    }
+}
 
-        // Initialize Room database
-        database = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "MedTekLocalDB"
-        ).build()
-        val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
+@Composable
+fun MainNavHost() {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = "home"
+    ) {
+        composable("home") { HomeScreen(navController) }
+        composable("survey") { SurveyScreen(navController) }
     }
 }

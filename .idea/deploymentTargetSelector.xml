@@ -16,13 +16,10 @@
       <SelectionState runConfigName="WeatherDaoTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="QuoteDaoTest">
+      <SelectionState runConfigName="HomeActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="QuoteRepositoryTest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="WeatherRepositoryTest">
+      <SelectionState runConfigName="PreviewHomeScreenEmpty">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
