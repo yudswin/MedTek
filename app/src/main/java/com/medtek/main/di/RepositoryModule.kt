@@ -1,5 +1,7 @@
 package com.medtek.main.di
 
+import com.medtek.main.data.repository.greeting.QuoteRepository
+import com.medtek.main.data.repository.greeting.QuoteRepositoryImpl
 import com.medtek.main.data.repository.greeting.WeatherRepositoryImpl
 import com.medtek.main.data.repository.greeting.WeatherRepository
 import dagger.Binds
@@ -18,4 +20,10 @@ abstract class RepositoryModule {
     abstract fun bindWeatherRepository(
         impl: WeatherRepositoryImpl
     ): WeatherRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindQuoteRepository(
+        impl: QuoteRepositoryImpl
+    ): QuoteRepository
 }

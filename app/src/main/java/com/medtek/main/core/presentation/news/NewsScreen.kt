@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.medtek.main.core.presentation.news.components.NewsCard
+import com.medtek.main.data.local.entities.Quote
 import com.medtek.main.data.local.entities.Weather
 
 @Composable
@@ -27,9 +28,16 @@ fun NewsScreen(
     viewModel: WeatherViewModel = hiltViewModel()
 ) {
     val weatherState = viewModel.weatherState.value
-    val loadingState = viewModel.loadingState
-    val loadError = viewModel.loadError.value
-    val errorState = viewModel.errorState.value
+    val weatherLoadingState = viewModel.weatherLoadingState
+    val weatherLoadError = viewModel.weatherLoadError.value
+    val weatherErrorState = viewModel.weatherErrorState.value
+
+    val quoteState = viewModel.quoteState.value
+    val quoteLoadingState = viewModel.quoteLoadingState
+    val quoteLoadError = viewModel.quoteLoadError.value
+    val quoteErrorState = viewModel.quoteErrorState.value
+
+    val loadingState = weatherLoadingState.value && quoteLoadingState.value
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -46,22 +54,20 @@ fun NewsScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text("News Screen", style = MaterialTheme.typography.bodySmall)
-
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    if (loadingState.value) {
+                    if (loadingState) {
                         CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                     } else {
-                        weatherState?.let { WeatherCard(it) }
-                    }
-
-                    if (loadError.isNotEmpty()) {
-                        viewModel.loadWeather()
+                        weatherState?.let { weather ->
+                            quoteState?.let { quote ->
+                                WeatherCard(weather, quote)
+                            }
+                        }
                     }
                 }
-
                 LazyColumn {
                     items(10) {
                         NewsCard()
@@ -74,20 +80,33 @@ fun NewsScreen(
 
 
 @Composable
-fun WeatherCard(weather: Weather) {
-    Card(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+fun WeatherCard(weather: Weather, quote: Quote) {
+    Column {
+        Card(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Today's Weather")
-            Text("Temperature: ${weather.temp}°C")
-            Text("Condition: ${weather.condition}")
-            Text("Humidity: ${weather.humidity}%")
-            Text("Wind Speed: ${weather.windSpeed} km/h")
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text("Today's Weather")
+                Text("Temperature: ${weather.temp}°C")
+                Text("Condition: ${weather.condition}")
+                Text("Humidity: ${weather.humidity}%")
+                Text("Wind Speed: ${weather.windSpeed} km/h")
+            }
+        }
+        Card(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text("Quote of the Day")
+                Text("Quote: ${quote.quote}")
+                Text("Author: ${quote.author}")
+            }
         }
     }
 }
-

@@ -26,4 +26,7 @@ object DatabaseModule {
     @Provides
     fun provideWeatherDao(db: AppDatabase) = db.weatherDao
 
+    @Provides
+    fun provideQuoteDao(db: AppDatabase) = db.quoteDao
+
 }

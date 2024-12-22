@@ -5,7 +5,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.medtek.main.data.local.entities.Quote
 import com.medtek.main.data.local.entities.Weather
+import com.medtek.main.data.repository.greeting.QuoteRepository
 import com.medtek.main.data.repository.greeting.WeatherRepository
 import com.medtek.main.utilties.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,45 +16,104 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    private val repository: WeatherRepository
+    private val repositoryWeather: WeatherRepository,
+    private val repositoryQuote: QuoteRepository
 ) : ViewModel() {
 
     val country = "Vietnam"
 
+    // Weather Variables
     private var _weatherState = mutableStateOf<Weather?>(null)
     val weatherState: State<Weather?> = _weatherState
 
-    private val _loadingState = mutableStateOf(false)
-    val loadingState: State<Boolean> = _loadingState
+    private val _weatherLoadingState = mutableStateOf(false)
+    val weatherLoadingState: State<Boolean> = _weatherLoadingState
 
-    private val _errorState = mutableStateOf<String?>(null)
-    val errorState: State<String?> = _errorState
+    private val _weatherErrorState = mutableStateOf<String?>(null)
+    val weatherErrorState: State<String?> = _weatherErrorState
 
-    var loadError = mutableStateOf("")
+    var weatherLoadError = mutableStateOf("")
+
+    // Quote Variables
+    private var _quoteState = mutableStateOf<Quote?>(null)
+    val quoteState: State<Quote?> = _quoteState
+
+    private val _quoteLoadingState = mutableStateOf(false)
+    val quoteLoadingState: State<Boolean> = _quoteLoadingState
+
+    private val _quoteErrorState = mutableStateOf<String?>(null)
+    val quoteErrorState: State<String?> = _quoteErrorState
+
+    var quoteLoadError = mutableStateOf("")
+
 
     init {
         loadWeather()
-
+        loadQuote()
     }
 
 
     fun getWeather() {
         viewModelScope.launch {
-            Log.d("WeatherViewModel", "Fetching weather data...")
-            _loadingState.value = true
-            _errorState.value = null
-            val result = repository.getWeather()
+            Log.i("WeatherViewModel", "Fetching weather data...")
+            _weatherLoadingState.value = true
+            _weatherErrorState.value = null
+            val result = repositoryWeather.getWeather()
             when (result) {
                 is Resource.Success -> {
-                    Log.d("WeatherViewModel", "Weather data fetched successfully")
+                    Log.i("WeatherViewModel", "Weather data fetched successfully")
                     _weatherState.value = result.data
-                    _loadingState.value = false
+                    _weatherLoadingState.value = false
                 }
 
                 is Resource.Error -> {
                     Log.e("WeatherViewModel", "Error fetching weather data: ${result.message}")
-                    _errorState.value = result.message
-                    _loadingState.value = false
+                    _weatherErrorState.value = result.message
+                    _weatherLoadingState.value = false
+                }
+            }
+        }
+    }
+
+    fun getQuote() {
+        viewModelScope.launch {
+            Log.i("WeatherViewModel", "Fetching quote data...")
+            _quoteLoadingState.value = true
+            _quoteErrorState.value = null
+            val result = repositoryQuote.getNextQuote()
+            when (result) {
+                is Resource.Success -> {
+                    Log.i("WeatherViewModel", "Quote data fetched successfully")
+                    _quoteState.value = result.data
+                    _quoteLoadingState.value = false
+                    repositoryQuote.markQuoteAsUsed(result.data!!)
+                }
+
+                is Resource.Error -> {
+                    Log.e("WeatherViewModel", "Error fetching quote data: ${result.message}")
+                    _quoteErrorState.value = result.message
+                    _quoteLoadingState.value = false
+                }
+            }
+        }
+    }
+
+    fun loadQuote() {
+        viewModelScope.launch {
+            _quoteLoadingState.value = true
+            _quoteErrorState.value = null
+            val result = repositoryQuote.fetchAndStoreQuotes(7)
+            when (result) {
+                is Resource.Success -> {
+                    Log.i("WeatherViewModel", "Quote data fetched successfully")
+                    _quoteLoadingState.value = false
+                    getQuote()
+                }
+
+                is Resource.Error -> {
+                    Log.e("WeatherViewModel", "Error fetching quote data: ${result.message}")
+                    _quoteErrorState.value = result.message
+                    _quoteLoadingState.value = false
                 }
             }
         }
@@ -60,18 +121,18 @@ class WeatherViewModel @Inject constructor(
 
     fun loadWeather() {
         viewModelScope.launch {
-            _loadingState.value = true
-            _errorState.value = null
-            val result = repository.fetchWeather(country)
+            _weatherLoadingState.value = true
+            _weatherErrorState.value = null
+            val result = repositoryWeather.fetchWeather(country)
             when (result) {
                 is Resource.Success -> {
-                    loadError.value = ""
-                    _loadingState.value = false
+                    weatherLoadError.value = ""
+                    _weatherLoadingState.value = false
                     getWeather()
                 }
 
                 is Resource.Error -> {
-                    _loadingState.value = false
+                    _weatherLoadingState.value = false
                 }
             }
         }

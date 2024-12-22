@@ -5,10 +5,7 @@ import com.medtek.main.data.local.dao.WeatherDao
 import com.medtek.main.data.local.entities.Weather
 import com.medtek.main.data.remote.services.WeatherService
 import com.medtek.main.utilties.Resource
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
-import kotlin.text.format
 
 class WeatherRepositoryImpl @Inject constructor(
     private val dao: WeatherDao,
