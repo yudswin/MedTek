@@ -1,6 +1,6 @@
-package com.medtek.main.data.remote.dto
+package com.medtek.main.data.remote.models
 
-data class FieldDto(
+data class FieldRemote(
     val _id: String,
     val configName: String,
     val configValue: List<String>,

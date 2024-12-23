@@ -7,6 +7,12 @@ import androidx.room.PrimaryKey
 data class Field(
     @PrimaryKey val id: String,
     val configName: String,
-    val configValue: List<String>,
+    val configValue: String,
     val isActive: Boolean
 )
+
+//{
+//    companion object {
+//        val noteColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink)
+//    }
+//}

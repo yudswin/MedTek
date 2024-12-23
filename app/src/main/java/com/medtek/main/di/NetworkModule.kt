@@ -1,5 +1,6 @@
 package com.medtek.main.di
 
+import com.medtek.main.data.remote.services.FieldService
 import com.medtek.main.data.remote.services.QuoteService
 import com.medtek.main.data.remote.services.WeatherService
 import com.medtek.main.utilties.Constants.BASE_URL
@@ -34,6 +35,12 @@ object NetworkModule {
     @Singleton
     fun provideQuoteService(retrofit: Retrofit): QuoteService {
         return retrofit.create(QuoteService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFieldService(retrofit: Retrofit): FieldService {
+        return retrofit.create(FieldService::class.java)
     }
 
 

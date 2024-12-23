@@ -29,4 +29,7 @@ object DatabaseModule {
     @Provides
     fun provideQuoteDao(db: AppDatabase) = db.quoteDao
 
+    @Provides
+    fun provideFieldDao(db: AppDatabase) = db.fieldDao
+
 }

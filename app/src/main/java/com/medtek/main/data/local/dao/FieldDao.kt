@@ -12,5 +12,8 @@ interface FieldDao {
     suspend fun insertConfigs(configs: List<Field>)
 
     @Query("SELECT * FROM configFields")
-    suspend fun getConfigs(): List<Field>
+    suspend fun getAllConfigs(): List<Field>
+
+    @Query("SELECT * FROM configFields WHERE configName IS :config")
+    suspend fun getConfigsByName(config: String): Field
 }
