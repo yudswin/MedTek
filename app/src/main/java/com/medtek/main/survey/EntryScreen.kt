@@ -21,13 +21,13 @@ fun EntryScreen(
         startDestination = "welcome_screen"
     ) {
         composable("welcome_screen") {
-            WelcomeScreen()
+            WelcomeScreen(parentNavController = navController)
         }
         composable("survey_screen") { backStackEntry ->
             val surveyViewModel: SurveyViewModel = hiltViewModel(backStackEntry)
             SurveyScreen(
                 viewModel = surveyViewModel,
-                parentNavController = navController
+                parentNavController = parentNavController
             )
         }
     }

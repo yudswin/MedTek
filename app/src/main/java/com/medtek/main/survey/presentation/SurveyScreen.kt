@@ -15,7 +15,7 @@ import com.medtek.main.survey.viewmodel.SurveyViewModel
 @Composable
 fun SurveyScreen(
     parentNavController: NavController,
-    viewModel: SurveyViewModel = hiltViewModel()
+    viewModel: SurveyViewModel = hiltViewModel(),
 ) {
     val fieldState = viewModel.fieldState.value
     val loadingState = viewModel.loadingState

@@ -46,7 +46,7 @@ class WeatherRepositoryImpl @Inject constructor(
         val storedResponse = try {
             dao.insertWeather(weather)
         } catch (e: Exception) {
-            return Resource.Error("api.getWeatherByCountry(country) failed: $e")
+            return Resource.Error("fetchWeather failed: $e")
         }
 
         return return Resource.Success(storedResponse)

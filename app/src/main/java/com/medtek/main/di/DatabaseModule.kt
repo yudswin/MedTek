@@ -32,4 +32,7 @@ object DatabaseModule {
     @Provides
     fun provideFieldDao(db: AppDatabase) = db.fieldDao
 
+    @Provides
+    fun provideUserDao(db: AppDatabase) = db.userDao
+
 }

@@ -1,5 +1,6 @@
 package com.medtek.main.di
 
+import com.medtek.main.data.remote.services.AuthService
 import com.medtek.main.data.remote.services.FieldService
 import com.medtek.main.data.remote.services.QuoteService
 import com.medtek.main.data.remote.services.WeatherService
@@ -41,6 +42,12 @@ object NetworkModule {
     @Singleton
     fun provideFieldService(retrofit: Retrofit): FieldService {
         return retrofit.create(FieldService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
     }
 
 
