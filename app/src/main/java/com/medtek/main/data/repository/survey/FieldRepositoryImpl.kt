@@ -31,15 +31,15 @@ class FieldRepositoryImpl @Inject constructor(
 
         val fieldEntities = response.body()?.map { dto ->
             val configValueAsString = when (dto.configValue) {
-                is List<*> -> (dto.configValue as List<String>).joinToString(",") // Convert List<String> to a single String
-                is Int -> dto.configValue.toString() // Convert Int to String
+                is List<*> -> (dto.configValue as List<String>).joinToString(",")
+                is Int -> dto.configValue.toString()
                 else -> ""
             }
 
             Field(
                 id = dto._id,
                 configName = dto.configName,
-                configValue = configValueAsString, // Store as String
+                configValue = configValueAsString,
                 isActive = dto.isActive
             )
         } ?: emptyList()

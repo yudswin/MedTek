@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.accessibility.test.framework)
+    implementation(libs.androidx.foundation.layout.android)
 
     // JUnit
     testImplementation(libs.junit)

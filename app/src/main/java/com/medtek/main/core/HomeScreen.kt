@@ -10,20 +10,6 @@ import androidx.navigation.compose.rememberNavController
 import com.medtek.main.core.navigation.BottomNavBar
 import com.medtek.main.core.navigation.BottomNavGraph
 
-
-//@AndroidEntryPoint
-//class HomeActivity : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            AppTheme {
-////                val viewModel = hiltViewModel<WeatherViewModel>()
-//                HomeScreen()
-//            }
-//        }
-//    }
-//}
-
 @Composable
 fun HomeScreen(
     navController: NavHostController,

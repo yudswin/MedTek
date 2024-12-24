@@ -1,4 +1,4 @@
-package com.medtek.main.survey
+package com.medtek.main.survey.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.State
