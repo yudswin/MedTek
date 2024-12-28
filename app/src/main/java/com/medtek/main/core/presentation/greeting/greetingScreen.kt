@@ -14,77 +14,41 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.Canvas
 import com.medtek.main.core.presentation.greeting.components.ActionBar
 import com.medtek.main.core.presentation.greeting.components.CloseBar
-import com.medtek.main.core.presentation.greeting.components.WeatherCard
-import com.medtek.main.core.presentation.greeting.components.locationText
-import com.medtek.main.core.presentation.greeting.components.quoteCard
+import com.medtek.main.core.presentation.greeting.components.GreetingBottomBar
+import com.medtek.main.core.presentation.greeting.components.GreetingContent
+import com.medtek.main.core.presentation.greeting.components.GreetingTopBar
 
 
-@Preview
+
+@Preview(showBackground = true)
 @Composable
-fun GreetingDisplay() {
+fun GreetingScreen(
+    quote: String = "Success is not what you do when you are on top. Success is how high you bounce when you hit the bottom.",
+    author: String = "Sonia Ricotti",
+    temperature: Double = 72.0,
+    feelsLike: Double = 69.0,
+    location: String = "Hanoi, Vietnam",
+    onClose: () -> Unit = {},
+    onShare: () -> Unit = {},
+    onFavorite: () -> Unit = {}
+) {
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        topBar = { GreetingTopBar(onClose = onClose) },
+        bottomBar = { GreetingBottomBar(onShare = onShare, onFavorite = onFavorite) }
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .size(width = 400.dp, height = 50.dp)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                CloseBar()
-            }
-
-            Box(
-                modifier = Modifier
-                    .size(width = 400.dp, height = 750.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = 10.dp, vertical = 30.dp)
-            ) {
-                Canvas(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    drawRect(
-                        color = Color.LightGray,
-                        size = size
-                    )
-                }
-                Icon(
-                    imageVector = Icons.Default.FormatQuote,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .size(width = 100.dp, height = 100.dp)
-                        .offset(x = 30.dp)
-                )
-                Column(
-                    modifier = Modifier.offset(y = 100.dp)
-                ) {
-                    quoteCard()
-                }
-                Column(
-                    modifier = Modifier.offset(y = 350.dp),
-                ) {
-                    WeatherCard()
-                    locationText()
-                }
-                Icon(
-                    imageVector = Icons.Default.FormatQuote,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .size(width = 100.dp, height = 100.dp)
-                        .offset(x = 240.dp, y = 600.dp)
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .size(width = 400.dp, height = 50.dp)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                ActionBar()
-            }
+            GreetingContent(
+                quote = quote,
+                author = author,
+                temperature = temperature,
+                feelsLike = feelsLike,
+                location = location
+            )
         }
     }
 }
