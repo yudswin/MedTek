@@ -12,29 +12,39 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.Canvas
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.medtek.main.core.presentation.greeting.components.ActionBar
 import com.medtek.main.core.presentation.greeting.components.CloseBar
 import com.medtek.main.core.presentation.greeting.components.GreetingBottomBar
 import com.medtek.main.core.presentation.greeting.components.GreetingContent
 import com.medtek.main.core.presentation.greeting.components.GreetingTopBar
+import com.medtek.main.core.presentation.greeting.components.Action
 
-
-
-@Preview(showBackground = true)
 @Composable
 fun GreetingScreen(
-    quote: String = "Success is not what you do when you are on top. Success is how high you bounce when you hit the bottom.",
-    author: String = "Sonia Ricotti",
-    temperature: Double = 72.0,
-    feelsLike: Double = 69.0,
-    location: String = "Hanoi, Vietnam",
-    onClose: () -> Unit = {},
-    onShare: () -> Unit = {},
-    onFavorite: () -> Unit = {}
+    viewModel: WeatherViewModel = hiltViewModel(),
+    onClose: () -> Unit,
+    onActionClick: (Action) -> Unit
 ) {
+
+    val weatherState = viewModel.weatherState.value
+    val weatherLoadingState = viewModel.weatherLoadingState
+    val weatherLoadError = viewModel.weatherLoadError.value
+    val weatherErrorState = viewModel.weatherErrorState.value
+
+    val quoteState = viewModel.quoteState.value
+    val quoteLoadingState = viewModel.quoteLoadingState
+    val quoteLoadError = viewModel.quoteLoadError.value
+    val quoteErrorState = viewModel.quoteErrorState.value
+
+    val loadingState = weatherLoadingState.value && quoteLoadingState.value
+
     Scaffold(
         topBar = { GreetingTopBar(onClose = onClose) },
-        bottomBar = { GreetingBottomBar(onShare = onShare, onFavorite = onFavorite) }
+        bottomBar = { GreetingBottomBar(onActionClick = onActionClick) }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -42,16 +52,52 @@ fun GreetingScreen(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
-            GreetingContent(
-                quote = quote,
-                author = author,
-                temperature = temperature,
-                feelsLike = feelsLike,
-                location = location
-            )
+            when {
+                loadingState -> LoadingView()
+                weatherLoadError.isNotEmpty() || quoteLoadError.isNotEmpty() -> ErrorView(
+                    weatherError = weatherErrorState ?: "Unknown weather error",
+                    quoteError = quoteErrorState ?: "Unknown quote error"
+                )
+                weatherState != null && quoteState != null -> GreetingContent(
+                    weather = weatherState,
+                    quote = quoteState
+                )
+                else -> ErrorView("Unexpected error occurred.")
+            }
         }
     }
 }
+
+@Composable
+fun LoadingView() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun ErrorView(weatherError: String, quoteError: String? = null) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Error occurred:", style = MaterialTheme.typography.titleLarge, color = Color.Red)
+            Text("Weather: $weatherError", style = MaterialTheme.typography.bodyLarge)
+            quoteError?.let {
+                Text("Quote: $it", style = MaterialTheme.typography.bodyLarge)
+            }
+        }
+    }
+}
+
+
 
 
 
