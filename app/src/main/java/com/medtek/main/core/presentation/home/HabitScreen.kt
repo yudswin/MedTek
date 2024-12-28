@@ -16,18 +16,21 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.medtek.main.core.presentation.home.components.TopHabitBar
 import com.medtek.main.core.presentation.home.pages.CalendarPage
 import com.medtek.main.core.presentation.home.pages.DailyPage
-import com.medtek.main.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun HabitScreen(initialPage: Int = 0, isEmpty: Boolean = false) {
+fun HabitScreen(
+    initialPage: Int? = null,
+    isEmpty: Boolean = false,
+    viewModel: HabitViewModel
+) {
     Scaffold(
         topBar = { TopHabitBar() },
         modifier = Modifier.fillMaxSize(),
@@ -42,7 +45,7 @@ fun HabitScreen(initialPage: Int = 0, isEmpty: Boolean = false) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val pagerState = rememberPagerState(
-                    initialPage = initialPage,
+                    initialPage = initialPage ?: 0,
                     pageCount = { 2 }
                 )
                 val coroutineScope = rememberCoroutineScope()
@@ -85,7 +88,7 @@ fun HabitScreen(initialPage: Int = 0, isEmpty: Boolean = false) {
                     modifier = Modifier.fillMaxSize()
                 ) { page ->
                     when (page) {
-                        0 -> DailyPage(isEmpty=isEmpty)
+                        0 -> DailyPage(isEmpty = isEmpty, viewModel = viewModel)
                         1 -> CalendarPage()
                     }
                 }
@@ -94,19 +97,4 @@ fun HabitScreen(initialPage: Int = 0, isEmpty: Boolean = false) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewHabitScreen() {
-    AppTheme() {
-        HabitScreen()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewHabitScreenCalendar() {
-    AppTheme {
-        HabitScreen(1)
-    }
-}
 

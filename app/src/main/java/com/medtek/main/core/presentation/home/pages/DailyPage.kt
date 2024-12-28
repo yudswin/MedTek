@@ -19,13 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.medtek.main.core.presentation.home.HabitViewModel
 import com.medtek.main.core.presentation.home.components.TopHabitBar
 import com.medtek.main.core.presentation.home.components.progresscard.HabitCard
 import com.medtek.main.core.presentation.home.components.weeklybar.WeeklyBar
 import com.medtek.main.ui.theme.AppTheme
 
 @Composable
-fun DailyPage(isEmpty: Boolean = false) {
+fun DailyPage(
+    isEmpty: Boolean = false,
+    viewModel: HabitViewModel
+) {
     Scaffold(
         topBar = { WeeklyBar() },
         modifier = Modifier.fillMaxSize(),
@@ -78,13 +82,5 @@ fun DailyPage(isEmpty: Boolean = false) {
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewDailyPage() {
-    AppTheme {
-        DailyPage()
     }
 }

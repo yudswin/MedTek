@@ -1,10 +1,9 @@
-import org.gradle.kotlin.dsl.test
-
 plugins {
-    id("com.google.devtools.ksp") version "2.0.0-1.0.24"
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.compose.compiler)
-    kotlin("android")
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("dagger.hilt.android.plugin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -22,43 +21,40 @@ android {
             useSupportLibrary = true
         }
 
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        debug {
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"mongodb+srv://mobileApplication:7DIDNohssRKgsi7c@cluster0.cwr8e.mongodb.net/\""
-            )
-        }
         release {
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"mongodb+srv://mobileApplication:7DIDNohssRKgsi7c@cluster0.cwr8e.mongodb.net/\""
-            )
-            isMinifyEnabled = true // To obfuscate your code
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_18
         targetCompatibility = JavaVersion.VERSION_18
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
     kotlinOptions {
         jvmTarget = "18"
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 }
 
@@ -73,36 +69,35 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.accessibility.test.framework)
+    implementation(libs.androidx.foundation.layout.android)
 
-
+    // JUnit
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    // Mockito core library
-    testImplementation("org.mockito:mockito-core:5.5.0")
 
-    // Mockito Kotlin extensions (for easier syntax with Kotlin)
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
+    // Mockito
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    androidTestImplementation(libs.mockito.android)
 
-    // Mockito for Android (if required for instrumentation tests)
-    androidTestImplementation("org.mockito:mockito-android:5.5.0")
-
+    // Debug
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("androidx.compose.ui:ui:1.7.5")
-    implementation("androidx.compose.ui:ui-tooling:1.7.5")
-    implementation("androidx.compose.foundation:foundation:1.4.3")
-    implementation("androidx.compose.material:material:1.4.3")
-    implementation("androidx.compose.material:material-icons-core:1.4.3")
-    implementation("androidx.compose.material:material-icons-extended:1.4.3")
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    implementation("androidx.navigation:navigation-compose:2.4.0")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.4.2")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
+    // Essential
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
@@ -110,11 +105,18 @@ dependencies {
     // Room with KSP
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
-    ksp("androidx.room:room-compiler:2.5.0")
+    ksp(libs.room.compiler)
 
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson.converter)
+    implementation(libs.moshi.kotlin)
 
-    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11")
+    // Hilt DI
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+
+    // OkHttp Logging Interceptor
+    implementation(libs.okhttp.logging.interceptor)
 }

@@ -45,9 +45,6 @@ fun RowScope.AddItem(
     navController: NavHostController
 ) {
     NavigationBarItem(
-//        label = {
-//            Text(text = screen.title)
-//        },
         icon = {
             Icon(
                 imageVector = screen.icon,
