@@ -1,4 +1,4 @@
-package com.medtek.main.core.presentation.greeting.components
+package com.medtek.main.greeting.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

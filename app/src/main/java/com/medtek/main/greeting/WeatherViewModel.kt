@@ -1,4 +1,4 @@
-package com.medtek.main.core.presentation.greeting
+package com.medtek.main.greeting
 
 import android.util.Log
 import androidx.compose.runtime.State

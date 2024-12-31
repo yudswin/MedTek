@@ -1,27 +1,19 @@
-package com.medtek.main.core.presentation.greeting
+package com.medtek.main.greeting
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FormatQuote
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
-import androidx.compose.foundation.Canvas
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.medtek.main.core.presentation.greeting.components.ActionBar
-import com.medtek.main.core.presentation.greeting.components.CloseBar
-import com.medtek.main.core.presentation.greeting.components.GreetingBottomBar
-import com.medtek.main.core.presentation.greeting.components.GreetingContent
-import com.medtek.main.core.presentation.greeting.components.GreetingTopBar
-import com.medtek.main.core.presentation.greeting.components.Action
+import com.medtek.main.greeting.components.Action
+import com.medtek.main.greeting.components.GreetingBottomBar
+import com.medtek.main.greeting.components.GreetingContent
+import com.medtek.main.greeting.components.GreetingTopBar
 
 @Composable
 fun GreetingScreen(

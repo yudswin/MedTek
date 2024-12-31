@@ -22,6 +22,7 @@ fun HomeScreen(
         bottomBar = { BottomNavBar(navController = innerNavController) }
     ) { innerPadding ->
         BottomNavGraph(
+            outterNavController = navController,
             navController = innerNavController,
             paddingValues = innerPadding,
             isEmpty,

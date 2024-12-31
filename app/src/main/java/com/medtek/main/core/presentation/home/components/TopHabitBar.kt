@@ -2,23 +2,23 @@ package com.medtek.main.core.presentation.home.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun TopHabitBar() {
+fun TopHabitBar(navController: NavController) {
     CenterAlignedTopAppBar(
         title = {
             Text(
@@ -32,12 +32,18 @@ fun TopHabitBar() {
             actionIconContentColor = MaterialTheme.colorScheme.onPrimary
         ),
         navigationIcon = {
-            Icon(
-                modifier = Modifier.padding(8.dp),
-                imageVector = Icons.Default.Mail,
-                contentDescription = "Account",
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
+            IconButton(
+                onClick = {
+                    navController.navigate("greeting")
+                }
+            ) {
+                Icon(
+                    modifier = Modifier.padding(8.dp),
+                    imageVector = Icons.Filled.WbSunny,
+                    contentDescription = "Account",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         },
         actions = {
             Icon(

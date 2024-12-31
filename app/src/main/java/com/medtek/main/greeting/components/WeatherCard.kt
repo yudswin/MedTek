@@ -1,4 +1,4 @@
-package com.medtek.main.core.presentation.greeting.components
+package com.medtek.main.greeting.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +27,10 @@ fun WeatherCard(weather: Weather) {
             Text("Temperature: ${weather.temp}°C", style = MaterialTheme.typography.bodyLarge)
             Text("Condition: ${weather.condition}", style = MaterialTheme.typography.bodyLarge)
             Text("Humidity: ${weather.humidity}%", style = MaterialTheme.typography.bodyLarge)
-            Text("Wind Speed: ${weather.windSpeed} km/h", style = MaterialTheme.typography.bodyLarge)
+            Text(
+                "Wind Speed: ${weather.windSpeed} km/h",
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }

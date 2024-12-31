@@ -1,4 +1,4 @@
-package com.medtek.main.core.presentation.greeting.components
+package com.medtek.main.greeting.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 
 @Preview
 @Composable
-fun ActionBar(){
+fun ActionBar() {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -26,7 +26,7 @@ fun ActionBar(){
     ) {
         Box(
             modifier = Modifier.fillMaxWidth(),
-        ){
+        ) {
             Icon(
                 imageVector = Icons.Default.Download,
                 contentDescription = "Account",

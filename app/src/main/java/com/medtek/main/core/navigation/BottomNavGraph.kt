@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +19,7 @@ import com.medtek.main.core.presentation.news.WeatherViewModel
 
 @Composable
 fun BottomNavGraph(
+    outterNavController: NavController,
     navController: NavHostController,
     paddingValues: PaddingValues,
     isEmptyHabit: Boolean = false,
@@ -33,7 +35,9 @@ fun BottomNavGraph(
             HabitScreen(
                 isEmpty = isEmptyHabit,
                 initialPage = initPage,
-                viewModel = habitViewModel
+                viewModel = habitViewModel,
+                navController = navController,
+                outterNavController = outterNavController
             )
         }
         composable(route = BottomNavItem.Calendar.route) {

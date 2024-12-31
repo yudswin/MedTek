@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.medtek.main.core.HomeScreen
+import com.medtek.main.greeting.GreetingScreen
 import com.medtek.main.survey.EntryScreen
 import com.medtek.main.survey.viewmodel.EntryViewModel
 import com.medtek.main.ui.theme.AppTheme
@@ -43,6 +44,17 @@ fun MainNavHost() {
 
         composable("home") {
             HomeScreen(navController = navController)
+        }
+
+        composable("greeting") {
+            GreetingScreen(
+                onClose = {
+                    navController.navigate("home") {
+                        popUpTo("greeting")
+                    }
+                },
+                onActionClick = {}
+            )
         }
     }
 }

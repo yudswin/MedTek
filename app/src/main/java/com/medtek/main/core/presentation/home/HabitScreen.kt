@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.medtek.main.core.presentation.home.components.TopHabitBar
 import com.medtek.main.core.presentation.home.pages.CalendarPage
 import com.medtek.main.core.presentation.home.pages.DailyPage
@@ -28,10 +29,12 @@ import kotlinx.coroutines.launch
 fun HabitScreen(
     initialPage: Int? = null,
     isEmpty: Boolean = false,
-    viewModel: HabitViewModel
+    viewModel: HabitViewModel,
+    navController: NavController,
+    outterNavController: NavController
 ) {
     Scaffold(
-        topBar = { TopHabitBar() },
+        topBar = { TopHabitBar(outterNavController) },
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
         Box(
