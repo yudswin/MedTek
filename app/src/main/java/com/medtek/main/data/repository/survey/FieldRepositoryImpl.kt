@@ -12,49 +12,6 @@ class FieldRepositoryImpl @Inject constructor(
     private val fieldService: FieldService
 ) : FieldRepository {
 
-    override suspend fun fetchConfigs(): Resource<Unit> {
-        Log.d("FieldRepositoryImpl", "fetchConfigs: Fetching configs started")
-        val response = try {
-            fieldService.getAllField()
-        } catch (e: Exception) {
-            Log.e("FieldRepositoryImpl", "fetchConfigs: Error during API call - ${e.message}")
-            return Resource.Error("Error during API call: ${e.message}")
-        }
-
-        if (!response.isSuccessful) {
-            Log.e(
-                "FieldRepositoryImpl",
-                "fetchConfigs: Failed to fetch configs. HTTP code: ${response.code()}"
-            )
-            return Resource.Error("Failed to fetch configs. HTTP code: ${response.code()}")
-        }
-
-        val fieldEntities = response.body()?.map { dto ->
-            val configValueAsString = when (dto.configValue) {
-                is List<*> -> (dto.configValue as List<String>).joinToString(",")
-                is Int -> dto.configValue.toString()
-                else -> ""
-            }
-
-            Field(
-                id = dto._id,
-                configName = dto.configName,
-                configValue = configValueAsString,
-                isActive = dto.isActive
-            )
-        } ?: emptyList()
-
-        return try {
-            fieldDao.insertConfigs(fieldEntities)
-            Log.d("FieldRepositoryImpl", "fetchConfigs: Configs stored successfully")
-            Resource.Success(Unit)
-        } catch (e: Exception) {
-            Log.e("FieldRepositoryImpl", "fetchConfigs: Error storing configs - ${e.message}")
-            return Resource.Error("Error storing configs: ${e.message}")
-        }
-    }
-
-
     override suspend fun getAllConfig(): Resource<List<Field?>> {
         Log.d("FieldRepositoryImpl", "getAllConfig: Fetching all configs started")
         val configs = try {
@@ -82,5 +39,83 @@ class FieldRepositoryImpl @Inject constructor(
 
         Log.d("FieldRepositoryImpl", "getConfigByName: Fetching config by name successful")
         return Resource.Success(configByName)
+    }
+
+    override suspend fun getAllFieldName(): Resource<List<String?>> {
+        Log.d("FieldRepositoryImpl", "getAllFieldName: Fetching all config names started")
+        val response = try {
+            fieldDao.getAllConfigNames()
+        } catch (e: Exception) {
+            Log.e(
+                "FieldRepositoryImpl",
+                "getAllFieldName: Error fetching config names - ${e.message}"
+            )
+            return Resource.Error("Error fetching config names: ${e.message}")
+        }
+
+        Log.d("FieldRepositoryImpl", "getAllFieldName: Fetching all config names successful")
+        return Resource.Success(response)
+    }
+
+    override suspend fun areAllFieldsFetched(): Resource<Boolean> {
+        Log.d("FieldRepositoryImpl", "areAllFieldsFetched: Checking if all fields are fetched")
+        val response = try {
+            fieldDao.getConfigCount()
+        } catch (e: Exception) {
+            Log.e("FieldRepositoryImpl", "areAllFieldsFetched: Error - ${e.message}")
+            return Resource.Error("Error validating fields: ${e.message}")
+        }
+
+        Log.d(
+            "FieldRepositoryImpl",
+            "areAllFieldsFetched: All fields fetched status - ${response > 0}"
+        )
+        return if (response > 0) Resource.Success(true)
+        else Resource.Success(false)
+    }
+
+    override suspend fun fetchFields(): Resource<Unit> {
+        Log.d("FieldRepositoryImpl", "fetchFields: Fetching fields started")
+        val response = try {
+            fieldService.getAllField()
+        } catch (e: Exception) {
+            Log.e("FieldRepositoryImpl", "fetchFields: Error during API call - ${e.message}")
+            return Resource.Error("Error during API call: ${e.message}")
+        }
+
+        Log.d("FieldRepositoryImpl", "fetchFields: response: ${response.body()}")
+
+        if (!response.isSuccessful) {
+            Log.e(
+                "FieldRepositoryImpl",
+                "fetchFields: Failed to fetch configs. HTTP code: ${response.code()}"
+            )
+            return Resource.Error("Failed to fetch configs. HTTP code: ${response.code()}")
+        }
+
+        return try {
+            val responseBody = response.body()
+            if (responseBody == null) {
+                Log.e("FieldRepositoryImpl", "fetchFields: Response body is null")
+                return Resource.Error("Response body is null")
+            }
+
+            val fieldEntities = responseBody.map { dto ->
+                Field(
+                    configName = dto.configName,
+                    configValues = dto.configValue,
+                    isActive = true
+                )
+            }
+
+            fieldDao.insertConfigs(fieldEntities)
+            Log.d("FieldRepositoryImpl", "fetchFields: Configs stored successfully")
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Log.e("FieldRepositoryImpl", "fetchFields: Error storing configs - ${e.message}")
+            Resource.Error("Error storing configs: ${e.message}")
+        } finally {
+            Log.d("FieldRepositoryImpl", "fetchFields: Fetching fields finished")
+        }
     }
 }

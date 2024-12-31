@@ -4,6 +4,7 @@ import com.medtek.main.data.remote.models.AuthResponse
 import com.medtek.main.data.remote.models.LoginResponse
 import com.medtek.main.data.remote.services.AuthRequest
 import com.medtek.main.data.remote.services.SignInRequest
+import com.medtek.main.data.remote.services.SurveyRequest
 import com.medtek.main.utilties.Resource
 
 interface AuthRepository {
@@ -12,4 +13,8 @@ interface AuthRepository {
     suspend fun getUserId(): Resource<String>
 
     suspend fun auth(request: AuthRequest): Resource<AuthResponse?>
+
+    suspend fun isNewUser(): Resource<Boolean>
+
+    suspend fun sendSurvey(request: SurveyRequest): Resource<Unit>
 }

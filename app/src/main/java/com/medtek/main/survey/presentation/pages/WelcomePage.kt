@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -16,14 +18,16 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,11 +50,13 @@ fun WelcomePage(
     val loadError = viewModel.loadError
     val context = LocalContext.current
 
+    val keyboardController = LocalSoftwareKeyboardController.current
 
-    val charLimit = 10
-    fun validate(text: CharSequence): Boolean {
-        return text.length > charLimit
-    }
+
+//    val charLimit = 10
+//    fun validate(text: CharSequence): Boolean {
+//        return text.length > charLimit
+//    }
 
     LaunchedEffect(signInState) {
         if (signInState != null) {
@@ -90,6 +96,16 @@ fun WelcomePage(
                 onValueChange = { email = it },
                 placeholder = { Text("YourEmail@mail.com") },
                 shape = MaterialTheme.shapes.small,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        keyboardController?.hide()
+                        viewModel.signIn(email)
+                    }
+                )
             )
             Spacer(modifier = Modifier.height(32.dp))
             Button(

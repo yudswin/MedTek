@@ -1,5 +1,7 @@
 package com.medtek.main.di
 
+import com.medtek.main.data.repository.core.UserRepository
+import com.medtek.main.data.repository.core.UserRepositoryImpl
 import com.medtek.main.data.repository.greeting.QuoteRepository
 import com.medtek.main.data.repository.greeting.QuoteRepositoryImpl
 import com.medtek.main.data.repository.greeting.WeatherRepositoryImpl
@@ -41,4 +43,11 @@ abstract class RepositoryModule {
     abstract fun bindAuthRepository(
         impl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRepository(
+        impl: UserRepositoryImpl
+    ): UserRepository
+
 }

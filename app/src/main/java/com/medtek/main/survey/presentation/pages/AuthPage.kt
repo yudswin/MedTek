@@ -1,6 +1,7 @@
 package com.medtek.main.survey.presentation.pages
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,10 +22,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +47,8 @@ import com.medtek.main.ui.theme.AppTheme
 @Composable
 fun AuthPage(
     navController: NavController?,
-    viewModel: WelcomeViewModel = hiltViewModel()
+    viewModel: WelcomeViewModel = hiltViewModel(),
+    onSuccess: () -> Unit
 ) {
     // ViewModel Values
     val loadingState = viewModel.loadingState
@@ -65,7 +68,7 @@ fun AuthPage(
 
     LaunchedEffect(authState) {
         if (authState != null) {
-            navController?.navigate("survey_screen")
+            onSuccess()
         }
     }
 
@@ -73,6 +76,10 @@ fun AuthPage(
         errorState?.let {
             Toast.makeText(context, loadError.value, Toast.LENGTH_LONG).show()
         }
+    }
+
+    BackHandler {
+        navController?.popBackStack("welcome", inclusive = false)
     }
 
     Box(
@@ -139,7 +146,13 @@ fun AuthPage(
                         modifier = Modifier
                             .width(40.dp)
                             .height(50.dp)
-                            .focusRequester(focusRequesters[i])
+                            .focusRequester(focusRequesters[i]),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                keyboardController?.hide()
+                                viewModel.auth(code = otpString)
+                            }
+                        )
                     )
                 }
             }
@@ -159,13 +172,5 @@ fun AuthPage(
                 }
             }
         }
-    }
-}
-
-@Composable
-@Preview
-fun PreviewAuthPage() {
-    AppTheme {
-        AuthPage(navController = null)
     }
 }

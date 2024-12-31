@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.accessibility.test.framework)
     implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
 
     // JUnit
     testImplementation(libs.junit)
@@ -119,4 +120,5 @@ dependencies {
 
     // OkHttp Logging Interceptor
     implementation(libs.okhttp.logging.interceptor)
+
 }

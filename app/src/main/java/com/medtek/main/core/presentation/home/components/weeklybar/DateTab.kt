@@ -67,7 +67,7 @@ fun DateTab(
 @Preview(showBackground = true)
 @Composable
 fun PreviewDateTab() {
-    AppTheme() {
+    AppTheme {
         DateTab()
     }
 }

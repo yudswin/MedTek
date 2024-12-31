@@ -47,7 +47,7 @@ fun WeeklyBar() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewFixedTabBar() {
-    AppTheme() {
+    AppTheme {
         WeeklyBar()
     }
 }

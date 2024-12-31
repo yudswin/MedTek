@@ -22,6 +22,7 @@ class WelcomeViewModel @Inject constructor(
 
     private val _signInState = mutableStateOf<LoginResponse?>(null)
     val signInState: State<LoginResponse?> = _signInState
+
     private val _authState = mutableStateOf<AuthResponse?>(null)
     val authState: State<AuthResponse?> = _authState
 

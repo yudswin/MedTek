@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b30c2c84dd61c041df4642f87cfeb708",
+    "identityHash": "b68228b2a4717530f9bcd30269c3e2d1",
     "entities": [
       {
         "tableName": "weather",
@@ -112,12 +112,12 @@
       },
       {
         "tableName": "configFields",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `configName` TEXT NOT NULL, `configValue` TEXT NOT NULL, `isActive` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `configName` TEXT NOT NULL, `configValues` TEXT NOT NULL, `isActive` INTEGER NOT NULL, `color` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -127,8 +127,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "configValue",
-            "columnName": "configValue",
+            "fieldPath": "configValues",
+            "columnName": "configValues",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -137,10 +137,16 @@
             "columnName": "isActive",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
             "id"
           ]
@@ -214,7 +220,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b30c2c84dd61c041df4642f87cfeb708')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b68228b2a4717530f9bcd30269c3e2d1')"
     ]
   }
 }

@@ -16,4 +16,10 @@ interface FieldDao {
 
     @Query("SELECT * FROM configFields WHERE configName IS :config")
     suspend fun getConfigsByName(config: String): Field
+
+    @Query("SELECT configName FROM configFields")
+    suspend fun getAllConfigNames(): List<String>
+
+    @Query("SELECT COUNT(*) FROM configFields")
+    suspend fun getConfigCount(): Int
 }

@@ -9,11 +9,11 @@ import java.util.Locale
 import com.medtek.main.data.local.entities.DailyRitual
 import com.medtek.main.data.local.entities.Survey
 import com.medtek.main.data.local.entities.Rituals
+import com.medtek.main.data.remote.models.ConfigValue
 
 class Converters {
     private val gson = Gson()
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
 
     @TypeConverter
     fun fromString(value: String): List<String> {
@@ -56,6 +56,34 @@ class Converters {
     @TypeConverter
     fun toRituals(rituals: Rituals): String {
         return gson.toJson(rituals)
+    }
+
+    @TypeConverter
+    fun fromColor(color: String): String {
+        return color
+    }
+
+    @TypeConverter
+    fun fromConfigValueList(configValues: List<ConfigValue>): String {
+        val type = object : TypeToken<List<ConfigValue>>() {}.type
+        return gson.toJson(configValues, type)
+    }
+
+    @TypeConverter
+    fun toConfigValueList(configValuesString: String): List<ConfigValue> {
+        val type = object : TypeToken<List<ConfigValue>>() {}.type
+        return gson.fromJson(configValuesString, type)
+    }
+
+    @TypeConverter
+    fun fromSurvey(survey: Survey): String {
+        return Gson().toJson(survey)
+    }
+
+    @TypeConverter
+    fun toSurvey(surveyString: String): Survey {
+        val type = object : TypeToken<Survey>() {}.type
+        return Gson().fromJson(surveyString, type)
     }
 
 

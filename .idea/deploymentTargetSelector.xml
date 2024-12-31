@@ -4,22 +4,33 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-12-09T03:32:59.689398100Z">
+        <DropdownSelection timestamp="2024-12-28T16:03:50.193232200Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=R58R91ZMREP" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\nguye\.android\avd\Spec_Phone_API_31.avd" />
             </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="WeatherDaoTest">
+      <SelectionState runConfigName="MainActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="HomeActivity">
+      <SelectionState runConfigName="CustomNumberPickerPreview">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2024-12-30T08:18:20.612996400Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\nguye\.android\avd\Spec_Phone_API_31.avd" />
+            </handle>
+          </Target>
+        </DropdownSelection>
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="CustomScrollPickerPreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="PreviewHomeScreenEmpty">
+      <SelectionState runConfigName="PreviewThisTime">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

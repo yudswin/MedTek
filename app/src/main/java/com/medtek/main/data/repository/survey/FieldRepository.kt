@@ -5,9 +5,13 @@ import com.medtek.main.utilties.Resource
 
 interface FieldRepository {
 
-    suspend fun fetchConfigs(): Resource<Unit>
-
     suspend fun getAllConfig(): Resource<List<Field?>>
 
     suspend fun getConfigByName(config: String): Resource<Field?>
+
+    suspend fun getAllFieldName(): Resource<List<String?>>
+
+    suspend fun areAllFieldsFetched(): Resource<Boolean>
+
+    suspend fun fetchFields(): Resource<Unit>
 }
