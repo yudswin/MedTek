@@ -14,14 +14,18 @@ class NewsRepositoryImpl @Inject constructor(
     override suspend fun checkNewsStatus(requestDate: String): Resource<Unit> {
         return try {
             val response = service.checkNewsStatus(NewsRequest(date = requestDate))
-            if (response.isSuccessful) {
-                // Possibly handle body if needed
+
+            return if (response.isSuccessful) {
                 Resource.Success(Unit)
             } else {
-                Resource.Error("HTTP ${response.code()}: ${response.message()}")
+                // Use the HTTP code for more logic in the ViewModel
+                Resource.Error(
+                    message = "Server responded with HTTP ${response.code()}",
+                    httpCode = response.code()
+                )
             }
         } catch (e: Exception) {
-            Resource.Error("Error during checkNewsStatus: ${e.message}")
+            return Resource.Error("Error during checkNewsStatus: ${e.message}")
         }
     }
 

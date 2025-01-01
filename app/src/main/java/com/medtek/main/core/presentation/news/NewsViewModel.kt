@@ -81,14 +81,51 @@ class NewsViewModel @Inject constructor(
             _error.value = null
 
             val result = repository.checkNewsStatus(dateString)
-            if (result is Resource.Error) {
-                _error.value = result.message
+            when (result) {
+                is Resource.Success -> {
+                    // If successful (200 OK, etc.), maybe do nothing
+                }
+                is Resource.Error -> {
+                    // Check if the server responded 304
+                    if (result.httpCode == 304) {
+                        // If 304, we can auto-refresh or prompt the user, etc.
+                        autoRefreshNews()
+                    } else {
+                        // Other errors: show them in the UI
+                        _error.value = result.message
+                    }
+                }
             }
-
             _loading.value = false
         }
     }
 
+    private fun autoRefreshNews() {
+        viewModelScope.launch {
+            // 1) Call refresh
+            val refreshResult = repository.refreshNews()
+            if (refreshResult is Resource.Error) {
+                _error.value = refreshResult.message
+                return@launch
+            }
+
+            // 2) After refreshing, fetch and store the new list
+            val fetchResult = repository.fetchAndStoreNewsList()
+            if (fetchResult is Resource.Error) {
+                _error.value = fetchResult.message
+                return@launch
+            }
+
+            // 3) Finally, update local data
+            //    e.g., reload from DB or set _newsState.value directly
+            val localResult = repository.getLocalNews()
+            if (localResult is Resource.Success) {
+                _newsState.value = localResult.data ?: emptyList()
+            } else {
+                _error.value = localResult.message
+            }
+        }
+    }
     // Example: cleanup old news
     fun cleanupOldNews(beforeDate: String) {
         viewModelScope.launch {
