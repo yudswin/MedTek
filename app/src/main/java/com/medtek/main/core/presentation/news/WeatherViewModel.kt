@@ -1,140 +1,109 @@
-package com.medtek.main.core.presentation.news
+package com.example.app.presentation
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.medtek.main.data.local.entities.Quote
-import com.medtek.main.data.local.entities.Weather
-import com.medtek.main.data.repository.greeting.QuoteRepository
-import com.medtek.main.data.repository.greeting.WeatherRepository
+import com.medtek.main.data.local.entities.News
+import com.medtek.main.data.repository.news.NewsRepository
 import com.medtek.main.utilties.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class WeatherViewModel @Inject constructor(
-    private val repositoryWeather: WeatherRepository,
-    private val repositoryQuote: QuoteRepository
+class NewsViewModel @Inject constructor(
+    private val repository: NewsRepository
 ) : ViewModel() {
 
-    val country = "Vietnam"
+    // StateFlow or LiveData to track news
+    private val _newsState = MutableStateFlow<List<News>>(emptyList())
+    val newsState = _newsState.asStateFlow()
 
-    // Weather Variables
-    private var _weatherState = mutableStateOf<Weather?>(null)
-    val weatherState: State<Weather?> = _weatherState
+    private val _loading = MutableStateFlow(false)
+    val loading = _loading.asStateFlow()
 
-    private val _weatherLoadingState = mutableStateOf(false)
-    val weatherLoadingState: State<Boolean> = _weatherLoadingState
+    private val _error = MutableStateFlow<String?>(null)
+    val error = _error.asStateFlow()
 
-    private val _weatherErrorState = mutableStateOf<String?>(null)
-    val weatherErrorState: State<String?> = _weatherErrorState
-
-    var weatherLoadError = mutableStateOf("")
-
-    // Quote Variables
-    private var _quoteState = mutableStateOf<Quote?>(null)
-    val quoteState: State<Quote?> = _quoteState
-
-    private val _quoteLoadingState = mutableStateOf(false)
-    val quoteLoadingState: State<Boolean> = _quoteLoadingState
-
-    private val _quoteErrorState = mutableStateOf<String?>(null)
-    val quoteErrorState: State<String?> = _quoteErrorState
-
-    var quoteLoadError = mutableStateOf("")
-
-
-    init {
-        loadWeather()
-        loadQuote()
-    }
-
-
-    fun getWeather() {
+    // Example: fetch local DB news
+    fun loadLocalNews() {
         viewModelScope.launch {
-            Log.i("WeatherViewModel", "Fetching weather data...")
-            _weatherLoadingState.value = true
-            _weatherErrorState.value = null
-            val result = repositoryWeather.getWeather()
-            when (result) {
-                is Resource.Success -> {
-                    Log.i("WeatherViewModel", "Weather data fetched successfully")
-                    _weatherState.value = result.data
-                    _weatherLoadingState.value = false
-                }
+            _loading.value = true
+            _error.value = null
 
+            when (val result = repository.getLocalNews()) {
+                is Resource.Success -> {
+                    _newsState.value = result.data ?: emptyList()
+                }
                 is Resource.Error -> {
-                    Log.e("WeatherViewModel", "Error fetching weather data: ${result.message}")
-                    _weatherErrorState.value = result.message
-                    _weatherLoadingState.value = false
+                    _error.value = result.message
+                    Log.e("NewsViewModel", "Error: ${result.message}")
                 }
             }
+
+            _loading.value = false
         }
     }
 
-    fun getQuote() {
+    // Example: refresh remote news
+    fun refreshRemoteNews() {
         viewModelScope.launch {
-            Log.i("WeatherViewModel", "Fetching quote data...")
-            _quoteLoadingState.value = true
-            _quoteErrorState.value = null
-            val result = repositoryQuote.getNextQuote()
-            when (result) {
-                is Resource.Success -> {
-                    Log.i("WeatherViewModel", "Quote data fetched successfully")
-                    _quoteState.value = result.data
-                    _quoteLoadingState.value = false
-                    repositoryQuote.markQuoteAsUsed(result.data!!)
-                }
+            _loading.value = true
+            _error.value = null
 
+            when (val refreshResult = repository.refreshNews()) {
+                is Resource.Success -> {
+                    // Possibly after refreshing, call fetchAndStoreNewsList
+                    when (val fetchResult = repository.fetchAndStoreNewsList()) {
+                        is Resource.Success -> {
+                            _newsState.value = fetchResult.data ?: emptyList()
+                        }
+                        is Resource.Error -> {
+                            _error.value = fetchResult.message
+                        }
+                    }
+                }
                 is Resource.Error -> {
-                    Log.e("WeatherViewModel", "Error fetching quote data: ${result.message}")
-                    _quoteErrorState.value = result.message
-                    _quoteLoadingState.value = false
+                    _error.value = refreshResult.message
                 }
             }
+
+            _loading.value = false
         }
     }
 
-    fun loadQuote() {
+    // Example: check news status
+    fun checkNewsStatus(dateString: String) {
         viewModelScope.launch {
-            _quoteLoadingState.value = true
-            _quoteErrorState.value = null
-            val result = repositoryQuote.fetchAndStoreQuotes(7)
-            when (result) {
-                is Resource.Success -> {
-                    Log.i("WeatherViewModel", "Quote data fetched successfully")
-                    _quoteLoadingState.value = false
-                    getQuote()
-                }
+            _loading.value = true
+            _error.value = null
 
-                is Resource.Error -> {
-                    Log.e("WeatherViewModel", "Error fetching quote data: ${result.message}")
-                    _quoteErrorState.value = result.message
-                    _quoteLoadingState.value = false
-                }
+            val result = repository.checkNewsStatus(dateString)
+            if (result is Resource.Error) {
+                _error.value = result.message
             }
+
+            _loading.value = false
         }
     }
 
-    fun loadWeather() {
+    // Example: cleanup old news
+    fun cleanupOldNews(beforeDate: String) {
         viewModelScope.launch {
-            _weatherLoadingState.value = true
-            _weatherErrorState.value = null
-            val result = repositoryWeather.fetchWeather(country)
-            when (result) {
-                is Resource.Success -> {
-                    weatherLoadError.value = ""
-                    _weatherLoadingState.value = false
-                    getWeather()
-                }
+            _loading.value = true
+            _error.value = null
 
-                is Resource.Error -> {
-                    _weatherLoadingState.value = false
-                }
+            val result = repository.cleanupOldNews(beforeDate)
+            if (result is Resource.Error) {
+                _error.value = result.message
+            } else {
+                // Optionally reload local news
+                loadLocalNews()
             }
+
+            _loading.value = false
         }
     }
 }

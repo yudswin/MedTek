@@ -1,5 +1,6 @@
 package com.medtek.main.di
 
+import com.medtek.main.data.remote.services.NewsService
 import com.medtek.main.utilties.Constants.ALT_URL
 import dagger.Module
 import dagger.Provides
@@ -25,10 +26,10 @@ object AltNetworkModule {
 
     }
 
-//    @Provides
-//    @Singleton
-//    fun provideNewsService(@AltRetrofit retrofit: Retrofit): NewsService {
-//        return retrofit.create(NewsService::class.java)
-//    }
+    @Provides
+    @Singleton
+    fun provideNewsService(@AltRetrofit retrofit: Retrofit): NewsService {
+        return retrofit.create(NewsService::class.java)
+    }
 
 }
