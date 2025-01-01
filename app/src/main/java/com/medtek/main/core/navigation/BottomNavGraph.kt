@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -30,8 +29,8 @@ fun BottomNavGraph(
         navController = navController,
         startDestination = BottomNavItem.Habit.route
     ) {
-        composable(route = BottomNavItem.Habit.route) {
-            val habitViewModel: HabitViewModel = viewModel()
+        composable(route = BottomNavItem.Habit.route) { backStackEntry ->
+            val habitViewModel: HabitViewModel = hiltViewModel(backStackEntry)
             HabitScreen(
                 isEmpty = isEmptyHabit,
                 initialPage = initPage,

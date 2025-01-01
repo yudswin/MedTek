@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.medtek.main.data.local.entities.Field
 import com.medtek.main.data.local.entities.Survey
-import com.medtek.main.data.remote.models.ConfigValue
+import com.medtek.main.data.remote.models.survey.ConfigValue
 import com.medtek.main.data.remote.services.SurveyRequest
 import com.medtek.main.data.repository.core.UserRepository
 import com.medtek.main.data.repository.survey.AuthRepository

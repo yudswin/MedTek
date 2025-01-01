@@ -1,6 +1,6 @@
 package com.medtek.main.data.remote.services
 
-import com.medtek.main.data.remote.models.QuoteRemote
+import com.medtek.main.data.remote.models.greeting.QuoteRemote
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

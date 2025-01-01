@@ -19,8 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,11 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.medtek.main.data.remote.models.ConfigValue
+import com.medtek.main.data.remote.models.survey.ConfigValue
 import com.medtek.main.survey.presentation.components.ChipContainer
 import com.medtek.main.survey.viewmodel.SurveyViewModel
 import com.medtek.main.ui.theme.AppTheme
-import kotlin.compareTo
 
 private fun convertToReadableString(input: String): String {
     return input.replace(Regex("([A-Z])"), " $1")

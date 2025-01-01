@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.medtek.main.data.remote.models.ConfigValue
+import com.medtek.main.data.remote.models.survey.ConfigValue
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.medtek.main.core.presentation.home.components.TopHabitBar
 import com.medtek.main.core.presentation.home.pages.CalendarPage
@@ -29,7 +30,7 @@ import kotlinx.coroutines.launch
 fun HabitScreen(
     initialPage: Int? = null,
     isEmpty: Boolean = false,
-    viewModel: HabitViewModel,
+    viewModel: HabitViewModel = hiltViewModel(),
     navController: NavController,
     outterNavController: NavController
 ) {
@@ -98,5 +99,6 @@ fun HabitScreen(
         }
     }
 }
+
 
 

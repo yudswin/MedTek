@@ -3,8 +3,8 @@ package com.medtek.main.data.repository.survey
 import android.util.Log
 import com.medtek.main.data.local.dao.UserDao
 import com.medtek.main.data.local.entities.User
-import com.medtek.main.data.remote.models.AuthResponse
-import com.medtek.main.data.remote.models.LoginResponse
+import com.medtek.main.data.remote.models.auth.AuthResponse
+import com.medtek.main.data.remote.models.auth.LoginResponse
 import com.medtek.main.data.remote.services.AuthRequest
 import com.medtek.main.data.remote.services.AuthService
 import com.medtek.main.data.remote.services.SignInRequest

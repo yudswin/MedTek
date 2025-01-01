@@ -17,10 +17,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.medtek.main.core.presentation.home.HabitViewModel
 import com.medtek.main.core.presentation.home.components.progresscard.HabitCard
 import com.medtek.main.core.presentation.home.components.weeklybar.WeeklyBar
+import com.medtek.main.ui.theme.AppTheme
 
 @Composable
 fun DailyPage(
@@ -79,5 +82,15 @@ fun DailyPage(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDailyPage() {
+    AppTheme {
+        DailyPage(
+            viewModel = hiltViewModel()
+        )
     }
 }

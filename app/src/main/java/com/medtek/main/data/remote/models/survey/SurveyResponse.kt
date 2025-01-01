@@ -1,4 +1,4 @@
-package com.medtek.main.data.remote.models
+package com.medtek.main.data.remote.models.survey
 
 data class SurveyResponse(
     val acknowledged: Boolean,

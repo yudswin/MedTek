@@ -1,13 +1,24 @@
 package com.medtek.main.data.repository.core
 
 import android.util.Log
+import com.medtek.main.data.local.dao.DayPlanDao
+import com.medtek.main.data.local.dao.HabitDao
+import com.medtek.main.data.local.dao.PlanDao
 import com.medtek.main.data.local.dao.UserDao
+import com.medtek.main.data.local.entities.DayPlan
+import com.medtek.main.data.local.entities.Habit
+import com.medtek.main.data.local.entities.Plan
 import com.medtek.main.data.local.entities.Survey
+import com.medtek.main.data.remote.services.UserService
 import com.medtek.main.utilties.Resource
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-    private val dao: UserDao
+    private val dao: UserDao,
+    private val api: UserService,
+    private val planDao: PlanDao,
+    private val dayPlanDao: DayPlanDao,
+    private val habitDao: HabitDao
 ) : UserRepository {
 
     override suspend fun getUserId(): Resource<String> {
@@ -120,4 +131,70 @@ class UserRepositoryImpl @Inject constructor(
 
         return isUserDoSurvey(userId)
     }
+
+    override suspend fun savePlanResponse(userId: String): Resource<Unit> {
+        Log.d("UserRepositoryImpl", "savePlanResponse: Fetching plan response for user $userId")
+        return try {
+            val response = api.fetchUserPlan(userId)
+
+            response.body()?.let {
+                val plan = Plan(
+                    planId = it.planId,
+                    startDate = it.startDate,
+                    endDate = it.endDate
+                )
+                planDao.insertPlan(plan)
+                dao.insertPlan(userId, it.planId)
+                Log.d("UserRepositoryImpl", "savePlanResponse: Plan inserted successfully")
+            }
+
+            response.body()?.let { responseBody ->
+                responseBody.dailyPlans.forEach { (dayOfWeek, habits) ->
+                    // Insert DayPlan
+                    val dayPlan = DayPlan(
+                        planId = responseBody.planId,
+                        dayOfWeek = dayOfWeek
+                    )
+                    val dayPlanId = dayPlanDao.insertDayPlan(dayPlan).toInt()
+                    Log.d(
+                        "UserRepositoryImpl",
+                        "savePlanResponse: DayPlan inserted successfully with ID $dayPlanId"
+                    )
+
+                    // Insert associated Habits
+                    habits.forEach { habitResponse ->
+                        val habit = Habit(
+                            trackingId = habitResponse.trackingId,
+                            dayPlanId = dayPlanId,
+                            habitName = habitResponse.habitName,
+                            habitType = habitResponse.habitType,
+                            defaultScore = habitResponse.defaultScore,
+                            description = habitResponse.description,
+                            targetUnit = habitResponse.targetUnit,
+                            progress = habitResponse.progress,
+                            goal = habitResponse.goal,
+                            icon = habitResponse.icon
+                        )
+                        habitDao.insertHabit(habit)
+                        Log.d(
+                            "UserRepositoryImpl",
+                            "savePlanResponse: Habit inserted successfully with tracking ID ${habit.trackingId}"
+                        )
+                    }
+                }
+            } ?: run {
+                Log.e("UserRepositoryImpl", "savePlanResponse: Response is null")
+                return Resource.Error("Response is null")
+            }
+
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Log.e(
+                "UserRepositoryImpl",
+                "savePlanResponse: Error saving plan response - ${e.message}"
+            )
+            Resource.Error("Error saving plan response: ${e.message}")
+        }
+    }
+
 }

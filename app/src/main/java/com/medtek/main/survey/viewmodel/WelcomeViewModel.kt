@@ -5,8 +5,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.medtek.main.data.remote.models.AuthResponse
-import com.medtek.main.data.remote.models.LoginResponse
+import com.medtek.main.data.remote.models.auth.AuthResponse
+import com.medtek.main.data.remote.models.auth.LoginResponse
 import com.medtek.main.data.remote.services.AuthRequest
 import com.medtek.main.data.remote.services.SignInRequest
 import com.medtek.main.data.repository.survey.AuthRepository

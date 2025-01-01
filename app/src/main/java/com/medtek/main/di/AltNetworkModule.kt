@@ -14,6 +14,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AltNetworkModule {
 
+    @AltRetrofit
     @Provides
     @Singleton
     fun provideAltRetrofit(): Retrofit {
@@ -26,7 +27,7 @@ object AltNetworkModule {
 
 //    @Provides
 //    @Singleton
-//    fun provideNewsService(retrofit: Retrofit): NewsService {
+//    fun provideNewsService(@AltRetrofit retrofit: Retrofit): NewsService {
 //        return retrofit.create(NewsService::class.java)
 //    }
 

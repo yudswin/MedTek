@@ -1,4 +1,4 @@
-package com.medtek.main.data.remote.models
+package com.medtek.main.data.remote.models.greeting
 
 data class WeatherRemote(
     val _id: String,

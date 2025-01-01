@@ -1,8 +1,8 @@
 package com.medtek.main.data.remote.services
 
-import com.medtek.main.data.remote.models.AuthResponse
-import com.medtek.main.data.remote.models.LoginResponse
-import com.medtek.main.data.remote.models.SurveyResponse
+import com.medtek.main.data.remote.models.auth.AuthResponse
+import com.medtek.main.data.remote.models.auth.LoginResponse
+import com.medtek.main.data.remote.models.survey.SurveyResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Path

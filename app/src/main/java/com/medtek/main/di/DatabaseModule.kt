@@ -35,4 +35,12 @@ object DatabaseModule {
     @Provides
     fun provideUserDao(db: AppDatabase) = db.userDao
 
+    @Provides
+    fun providePlanDao(db: AppDatabase) = db.planDao
+
+    @Provides
+    fun provideDayPlanDao(db: AppDatabase) = db.dayPlanDao
+
+    @Provides
+    fun provideHabitDao(db: AppDatabase) = db.habitDao
 }

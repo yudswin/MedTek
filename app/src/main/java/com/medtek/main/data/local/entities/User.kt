@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey val id: String,
     val email: String,
-    val ritualsHistory: List<DailyRitual>? = null,
+    val ritualsHistory: List<String>? = null,
     val surveyHistory: List<Survey>? = null,
     val notificationHistory: List<String>? = null,
     val ritualsOverview: Rituals? = null,

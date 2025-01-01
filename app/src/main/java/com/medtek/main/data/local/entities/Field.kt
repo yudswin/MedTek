@@ -2,7 +2,7 @@ package com.medtek.main.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.medtek.main.data.remote.models.ConfigValue
+import com.medtek.main.data.remote.models.survey.ConfigValue
 
 @Entity(tableName = "configFields")
 data class Field(

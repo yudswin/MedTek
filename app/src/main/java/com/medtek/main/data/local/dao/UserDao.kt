@@ -29,4 +29,8 @@ interface UserDao {
 
     @Query("SELECT surveyHistory FROM user WHERE id = :userId")
     suspend fun getSurveyHistory(userId: String): List<Survey>?
+
+    @Query("UPDATE user SET ritualsHistory = CASE WHEN ritualsHistory IS NULL THEN :ritualId ELSE ritualsHistory || :ritualId END WHERE id = :userId")
+    suspend fun insertPlan(userId: String, ritualId: String)
+
 }
