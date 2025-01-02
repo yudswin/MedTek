@@ -13,7 +13,6 @@ import com.medtek.main.core.navigation.BottomNavGraph
 @Composable
 fun HomeScreen(
     navController: NavHostController,
-    isEmpty: Boolean = false,
     initPage: Int = 0,
 ) {
     val innerNavController = rememberNavController()
@@ -25,7 +24,6 @@ fun HomeScreen(
             outterNavController = navController,
             navController = innerNavController,
             paddingValues = innerPadding,
-            isEmpty,
             initPage
         )
     }

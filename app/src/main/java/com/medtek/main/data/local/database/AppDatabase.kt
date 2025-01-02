@@ -29,7 +29,7 @@ import com.medtek.main.utilties.Converters
         DayPlan::class,
         Habit::class
     ],
-    version = 3
+    version = 4
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {

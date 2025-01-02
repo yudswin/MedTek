@@ -3,6 +3,7 @@ package com.medtek.main.data.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+
 @Entity(tableName = "plans")
 data class Plan(
     @PrimaryKey

@@ -19,4 +19,6 @@ interface UserRepository {
     suspend fun isCurrentUserDoSurvey(): Resource<Boolean>
 
     suspend fun savePlanResponse(userId: String): Resource<Unit>
+
+    suspend fun hasCurrentWeekPlan(userId: String): Resource<Boolean>
 }

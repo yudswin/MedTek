@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "97d383ee4e2fef68dab56c45688b2460",
+    "identityHash": "a21e89969bb1fa1db8b3cff604b63ffa",
     "entities": [
       {
         "tableName": "weather",
@@ -250,7 +250,7 @@
       },
       {
         "tableName": "day_plans",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `planId` TEXT NOT NULL, `dayOfWeek` TEXT NOT NULL, FOREIGN KEY(`planId`) REFERENCES `plans`(`planId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `planId` TEXT NOT NULL, `date` TEXT NOT NULL, FOREIGN KEY(`planId`) REFERENCES `plans`(`planId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -265,8 +265,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "dayOfWeek",
-            "columnName": "dayOfWeek",
+            "fieldPath": "date",
+            "columnName": "date",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -382,7 +382,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '97d383ee4e2fef68dab56c45688b2460')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a21e89969bb1fa1db8b3cff604b63ffa')"
     ]
   }
 }

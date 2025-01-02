@@ -27,10 +27,25 @@ interface UserDao {
     @Query("UPDATE user SET surveyHistory = :surveyHistory WHERE id = :userId")
     suspend fun updateUserSurvey(userId: String, surveyHistory: List<Survey>)
 
-    @Query("SELECT surveyHistory FROM user WHERE id = :userId")
-    suspend fun getSurveyHistory(userId: String): List<Survey>?
+    @Query("SELECT COUNT(surveyHistory) FROM user WHERE id = :userId")
+    suspend fun getSurveyHistoryCount(userId: String): Int
 
-    @Query("UPDATE user SET ritualsHistory = CASE WHEN ritualsHistory IS NULL THEN :ritualId ELSE ritualsHistory || :ritualId END WHERE id = :userId")
-    suspend fun insertPlan(userId: String, ritualId: String)
+    suspend fun insertPlan(userId: String, ritualId: String) {
+        val currentHistory = getRitualsHistory(userId)?.toMutableList() ?: mutableListOf()
 
+        if (!currentHistory.contains(ritualId)) {
+            currentHistory.add(ritualId)
+            updateRitualsHistory(userId, currentHistory)
+        }
+    }
+
+    @Query("UPDATE user SET ritualsHistory = :ritualsHistory WHERE id = :userId")
+    suspend fun updateRitualsHistory(userId: String, ritualsHistory: List<String>)
+
+    @Query("SELECT ritualsHistory FROM user WHERE id = :userId")
+    suspend fun getRitualsHistory(userId: String): List<String>?
+
+    @Query("UPDATE user SET ritualsHistory = NULL")
+    suspend fun clearAllRitualsHistory()
 }
+

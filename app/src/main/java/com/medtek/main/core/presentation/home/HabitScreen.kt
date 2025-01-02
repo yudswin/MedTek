@@ -24,16 +24,19 @@ import androidx.navigation.NavController
 import com.medtek.main.core.presentation.home.components.TopHabitBar
 import com.medtek.main.core.presentation.home.pages.CalendarPage
 import com.medtek.main.core.presentation.home.pages.DailyPage
+import com.medtek.main.core.presentation.home.viewmodel.DailyPageViewModel
+import com.medtek.main.core.presentation.home.viewmodel.HabitViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun HabitScreen(
     initialPage: Int? = null,
-    isEmpty: Boolean = false,
     viewModel: HabitViewModel = hiltViewModel(),
     navController: NavController,
     outterNavController: NavController
 ) {
+
+    viewModel.getUserId()
     Scaffold(
         topBar = { TopHabitBar(outterNavController) },
         modifier = Modifier.fillMaxSize(),
@@ -85,13 +88,13 @@ fun HabitScreen(
                         }
                     )
                 }
-
+                val dailyViewModel: DailyPageViewModel = hiltViewModel()
                 HorizontalPager(
                     state = pagerState,
                     modifier = Modifier.fillMaxSize()
                 ) { page ->
                     when (page) {
-                        0 -> DailyPage(isEmpty = isEmpty, viewModel = viewModel)
+                        0 -> DailyPage(viewModel = dailyViewModel)
                         1 -> CalendarPage()
                     }
                 }

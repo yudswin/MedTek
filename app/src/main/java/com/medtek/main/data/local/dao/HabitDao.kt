@@ -13,4 +13,10 @@ interface HabitDao {
 
     @Query("SELECT * FROM habits WHERE dayPlanId = :dayPlanId")
     suspend fun getHabitsByDayPlanId(dayPlanId: Int): List<Habit>
+
+    @Query("UPDATE habits SET progress = :progress WHERE trackingId = :trackingId")
+    suspend fun updateProgress(trackingId: String, progress: Int)
+
+    @Query("SELECT * FROM habits WHERE trackingId = :trackingId")
+    suspend fun getHabitById(trackingId: String): Habit?
 }

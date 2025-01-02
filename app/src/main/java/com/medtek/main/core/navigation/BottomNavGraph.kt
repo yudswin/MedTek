@@ -11,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.medtek.main.core.presentation.calendar.CalendarScreen
 import com.medtek.main.core.presentation.home.HabitScreen
-import com.medtek.main.core.presentation.home.HabitViewModel
+import com.medtek.main.core.presentation.home.viewmodel.HabitViewModel
 import com.medtek.main.core.presentation.music.MusicScreen
 import com.medtek.main.core.presentation.news.NewsScreen
 import com.medtek.main.core.presentation.news.WeatherViewModel
@@ -21,7 +21,6 @@ fun BottomNavGraph(
     outterNavController: NavController,
     navController: NavHostController,
     paddingValues: PaddingValues,
-    isEmptyHabit: Boolean = false,
     initPage: Int
 ) {
     NavHost(
@@ -32,7 +31,6 @@ fun BottomNavGraph(
         composable(route = BottomNavItem.Habit.route) { backStackEntry ->
             val habitViewModel: HabitViewModel = hiltViewModel(backStackEntry)
             HabitScreen(
-                isEmpty = isEmptyHabit,
                 initialPage = initPage,
                 viewModel = habitViewModel,
                 navController = navController,

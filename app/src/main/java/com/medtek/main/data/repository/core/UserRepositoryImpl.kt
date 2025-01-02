@@ -11,6 +11,9 @@ import com.medtek.main.data.local.entities.Plan
 import com.medtek.main.data.local.entities.Survey
 import com.medtek.main.data.remote.services.UserService
 import com.medtek.main.utilties.Resource
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -34,7 +37,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addSurvey(userId: String, survey: Survey): Resource<Unit> {
-        Log.d("UserRepositoryImpl", "addSurvey: Adding survey to user $userId")
+        Log.d("UserRepositoryImpl", "addSurvey: Adding survey to user $userId started")
         return try {
             dao.addSurveyToUser(userId, survey)
             Log.d("UserRepositoryImpl", "addSurvey: Survey added successfully")
@@ -46,7 +49,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clearSurvey(userId: String): Resource<Unit> {
-        Log.d("UserRepositoryImpl", "clearSurvey: Clearing survey history for user $userId")
+        Log.d("UserRepositoryImpl", "clearSurvey: Clearing survey history for user $userId started")
         return try {
             dao.clearAllSurveyHistory(userId)
             Log.d("UserRepositoryImpl", "clearSurvey: Survey history cleared successfully")
@@ -58,7 +61,10 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateSurvey(userId: String, surveyHistory: List<Survey>): Resource<Unit> {
-        Log.d("UserRepositoryImpl", "updateSurvey: Updating survey history for user $userId")
+        Log.d(
+            "UserRepositoryImpl",
+            "updateSurvey: Updating survey history for user $userId started"
+        )
         return try {
             dao.updateUserSurvey(userId, surveyHistory)
             Log.d("UserRepositoryImpl", "updateSurvey: Survey history updated successfully")
@@ -73,6 +79,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addSurveyCurrentUser(survey: Survey): Resource<Unit> {
+        Log.d("UserRepositoryImpl", "addSurveyCurrentUser: Adding survey to current user started")
         val userId = when (val result = getUserId()) {
             is Resource.Success -> result.data
             is Resource.Error -> {
@@ -98,15 +105,18 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun isUserDoSurvey(userId: String): Resource<Boolean> {
-        Log.d("UserRepositoryImpl", "isUserDoSurvey: Checking if user $userId has done survey")
+        Log.d(
+            "UserRepositoryImpl",
+            "isUserDoSurvey: Checking if user $userId has done survey started"
+        )
         return try {
-            val surveyHistory = dao.getSurveyHistory(userId)
-            if (surveyHistory.isNullOrEmpty()) {
-                Log.d("UserRepositoryImpl", "isUserDoSurvey: User $userId has not done any survey")
-                Resource.Success(false)
-            } else {
+            val surveyHistoryCount = dao.getSurveyHistoryCount(userId)
+            if (surveyHistoryCount > 0) {
                 Log.d("UserRepositoryImpl", "isUserDoSurvey: User $userId has done survey")
                 Resource.Success(true)
+            } else {
+                Log.d("UserRepositoryImpl", "isUserDoSurvey: User $userId has not done any survey")
+                Resource.Success(false)
             }
         } catch (e: Exception) {
             Log.e(
@@ -118,6 +128,10 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun isCurrentUserDoSurvey(): Resource<Boolean> {
+        Log.d(
+            "UserRepositoryImpl",
+            "isCurrentUserDoSurvey: Checking if current user has done survey started"
+        )
         val userId = when (val result = getUserId()) {
             is Resource.Success -> result.data
             is Resource.Error -> {
@@ -133,27 +147,40 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun savePlanResponse(userId: String): Resource<Unit> {
-        Log.d("UserRepositoryImpl", "savePlanResponse: Fetching plan response for user $userId")
+        Log.d(
+            "UserRepositoryImpl",
+            "savePlanResponse: Fetching plan response for user $userId started"
+        )
         return try {
             val response = api.fetchUserPlan(userId)
 
-            response.body()?.let {
+            response.body()?.let { planResponse ->
+                if (planDao.isPlanExists(planResponse.planId)) {
+                    Log.d(
+                        "UserRepositoryImpl",
+                        "savePlanResponse: Plan already exists, skipping insertion"
+                    )
+                    return Resource.Success(Unit)
+                }
+
                 val plan = Plan(
-                    planId = it.planId,
-                    startDate = it.startDate,
-                    endDate = it.endDate
+                    planId = planResponse.planId,
+                    startDate = planResponse.startDate,
+                    endDate = planResponse.endDate
                 )
                 planDao.insertPlan(plan)
-                dao.insertPlan(userId, it.planId)
+                dao.insertPlan(userId, planResponse.planId)
                 Log.d("UserRepositoryImpl", "savePlanResponse: Plan inserted successfully")
-            }
 
-            response.body()?.let { responseBody ->
-                responseBody.dailyPlans.forEach { (dayOfWeek, habits) ->
-                    // Insert DayPlan
+                val formatter = DateTimeFormatter.ISO_DATE
+                val startDate = LocalDate.parse(planResponse.startDate, formatter)
+
+                var currentDate = startDate
+                planResponse.dailyPlans.forEach { (_, habits) ->
                     val dayPlan = DayPlan(
-                        planId = responseBody.planId,
-                        dayOfWeek = dayOfWeek
+                        userId = userId,
+                        planId = planResponse.planId,
+                        date = currentDate.toString()
                     )
                     val dayPlanId = dayPlanDao.insertDayPlan(dayPlan).toInt()
                     Log.d(
@@ -161,7 +188,6 @@ class UserRepositoryImpl @Inject constructor(
                         "savePlanResponse: DayPlan inserted successfully with ID $dayPlanId"
                     )
 
-                    // Insert associated Habits
                     habits.forEach { habitResponse ->
                         val habit = Habit(
                             trackingId = habitResponse.trackingId,
@@ -181,6 +207,8 @@ class UserRepositoryImpl @Inject constructor(
                             "savePlanResponse: Habit inserted successfully with tracking ID ${habit.trackingId}"
                         )
                     }
+
+                    currentDate = currentDate.plusDays(1)
                 }
             } ?: run {
                 Log.e("UserRepositoryImpl", "savePlanResponse: Response is null")
@@ -197,4 +225,37 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun hasCurrentWeekPlan(userId: String): Resource<Boolean> {
+        Log.d(
+            "UserRepositoryImpl",
+            "hasCurrentWeekPlan: Checking if user $userId has a plan for the current week started"
+        )
+        return try {
+            val currentDate = LocalDate.now()
+            val startOfWeek = currentDate.with(DayOfWeek.MONDAY)
+            val endOfWeek = currentDate.with(DayOfWeek.SUNDAY)
+
+            val planIds = dao.getRitualsHistory(userId) ?: emptyList()
+            if (planIds.isEmpty()) {
+                Log.d("UserRepositoryImpl", "hasCurrentWeekPlan: No plans found for user $userId")
+                return Resource.Success(false)
+            }
+
+            val hasPlan = planIds.any { planId ->
+                planDao.hasPlanBetweenDates(planId, startOfWeek.toString(), endOfWeek.toString())
+            }
+
+            Log.d(
+                "UserRepositoryImpl",
+                "hasCurrentWeekPlan: User $userId has a plan for the current week: $hasPlan"
+            )
+            Resource.Success(hasPlan)
+        } catch (e: Exception) {
+            Log.e(
+                "UserRepositoryImpl",
+                "hasCurrentWeekPlan: Error checking current week plan - ${e.message}"
+            )
+            Resource.Error("Error checking current week plan: ${e.message}")
+        }
+    }
 }

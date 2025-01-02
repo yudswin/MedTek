@@ -20,7 +20,6 @@ class EntryViewModel @Inject constructor(
     private val userRepo: UserRepository
 ) : ViewModel() {
 
-
     private val _loadingState = mutableStateOf(false)
     val loadingState: State<Boolean> = _loadingState
 

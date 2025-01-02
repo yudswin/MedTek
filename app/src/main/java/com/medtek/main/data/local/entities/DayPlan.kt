@@ -12,6 +12,12 @@ import androidx.room.PrimaryKey
             parentColumns = ["planId"],
             childColumns = ["planId"],
             onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = User::class,
+            parentColumns = ["id"],
+            childColumns = ["userId"],
+            onDelete = ForeignKey.CASCADE
         )
     ]
 )
@@ -19,5 +25,6 @@ data class DayPlan(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val planId: String,
-    val dayOfWeek: String, // e.g., "monday", "tuesday"
+    val userId: String,
+    val date: String // Format: YYYY-MM-DD
 )

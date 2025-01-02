@@ -1,42 +1,37 @@
 package com.medtek.main.core.presentation.home.components.weeklybar
 
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.medtek.main.ui.theme.AppTheme
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
-fun WeeklyBar() {
-    val pageState = rememberPagerState(
-        pageCount = { 7 },
-        initialPage = 3
-    )
-
-    val dates = listOf(
-        LocalDate.now().minusDays(3),
-        LocalDate.now().minusDays(2),
-        LocalDate.now().minusDays(1),
-        LocalDate.now(),
-        LocalDate.now().plusDays(1),
-        LocalDate.now().plusDays(2),
-        LocalDate.now().plusDays(3),
-    )
-
+fun WeeklyBar(
+    pageState: PagerState,
+    dates: List<LocalDate>,
+    progressMap: Map<LocalDate, Float>
+) {
+    val coroutineScope = rememberCoroutineScope()
 
     TabRow(
         selectedTabIndex = pageState.currentPage
     ) {
         dates.forEachIndexed { index, date ->
+            val progress = progressMap[date] ?: 0f
             Tab(
                 selected = pageState.currentPage == index,
-                onClick = { }
+                onClick = {
+                    coroutineScope.launch {
+                        pageState.animateScrollToPage(index)
+                    }
+                }
             ) {
                 DateTab(
                     date = date,
-                    progress = (index + 1) * 0.2f, // Example progress values
+                    progress = progress,
                     isSelected = pageState.currentPage == index
                 )
             }
@@ -44,10 +39,10 @@ fun WeeklyBar() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewFixedTabBar() {
-    AppTheme {
-        WeeklyBar()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewFixedTabBar() {
+//    AppTheme {
+//        WeeklyBar()
+//    }
+//}

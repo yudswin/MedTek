@@ -70,7 +70,10 @@ class Converters {
     }
 
     @TypeConverter
-    fun toSurvey(surveyString: String): Survey {
+    fun toSurvey(surveyString: String?): Survey? {
+        if (surveyString.isNullOrEmpty()) {
+            return null
+        }
         val type = object : TypeToken<Survey>() {}.type
         return Gson().fromJson(surveyString, type)
     }

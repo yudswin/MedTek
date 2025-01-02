@@ -58,7 +58,8 @@ class SurveyViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            fetchFields()
+            getAllField()
+            if (_fieldState.value.isEmpty()) fetchFields()
         }
     }
 
@@ -289,7 +290,6 @@ class SurveyViewModel @Inject constructor(
         }
     }
 
-
+    data class FormField(val label: String, val values: List<String>)
 }
 
-data class FormField(val label: String, val values: List<String>)
