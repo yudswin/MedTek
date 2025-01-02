@@ -43,4 +43,7 @@ object DatabaseModule {
 
     @Provides
     fun provideHabitDao(db: AppDatabase) = db.habitDao
+
+    @Provides
+    fun provideNewsDao(db: AppDatabase) = db.newsDao
 }
