@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 4,
-    "identityHash": "81a0ea79e090734e9aecf6d8d64921f5",
+    "version": 5,
+    "identityHash": "f98a832f55598bec49eb596e7592cf4a",
     "entities": [
       {
         "tableName": "weather",
@@ -156,7 +156,7 @@
       },
       {
         "tableName": "user",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `email` TEXT NOT NULL, `ritualsHistory` TEXT NOT NULL, `surveyHistory` TEXT, `notificationHistory` TEXT, `ritualsOverview` TEXT, `city` TEXT, `isPriorityUser` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `email` TEXT NOT NULL, `ritualsHistory` TEXT, `surveyHistory` TEXT, `notificationHistory` TEXT, `ritualsOverview` TEXT, `city` TEXT, `isPriorityUser` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -174,7 +174,7 @@
             "fieldPath": "ritualsHistory",
             "columnName": "ritualsHistory",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "surveyHistory",
@@ -449,7 +449,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '81a0ea79e090734e9aecf6d8d64921f5')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f98a832f55598bec49eb596e7592cf4a')"
     ]
   }
 }

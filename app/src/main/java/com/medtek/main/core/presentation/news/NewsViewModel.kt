@@ -1,4 +1,4 @@
-package com.example.app.presentation
+package com.medtek.main.core.presentation.news
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,7 +18,6 @@ class NewsViewModel @Inject constructor(
     private val repository: NewsRepository
 ) : ViewModel() {
 
-    // StateFlow or LiveData to track news
     private val _newsState = MutableStateFlow<List<News>>(emptyList())
     val newsState = _newsState.asStateFlow()
 
@@ -27,8 +27,28 @@ class NewsViewModel @Inject constructor(
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
 
-    // Example: fetch local DB news
+    init {
+        val currentDate = LocalDate.now()
+        val cleanupThresholdDate = currentDate.minusDays(30).toString()
+
+        viewModelScope.launch {
+            // Load local news initially
+            loadLocalNews()
+
+            // Clean up old news
+            cleanupOldNews(cleanupThresholdDate)
+
+            // Refresh remote news
+            refreshRemoteNews()
+
+            // Check news status using today's date
+            checkNewsStatus(currentDate.toString())
+        }
+    }
+
+
     fun loadLocalNews() {
+        Log.d("NewsViewModel", "loadLocalNews called")
         viewModelScope.launch {
             _loading.value = true
             _error.value = null
@@ -37,6 +57,7 @@ class NewsViewModel @Inject constructor(
                 is Resource.Success -> {
                     _newsState.value = result.data ?: emptyList()
                 }
+
                 is Resource.Error -> {
                     _error.value = result.message
                     Log.e("NewsViewModel", "Error: ${result.message}")
@@ -47,24 +68,25 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    // Example: refresh remote news
     fun refreshRemoteNews() {
+        Log.d("NewsViewModel", "refreshRemoteNews called")
         viewModelScope.launch {
             _loading.value = true
             _error.value = null
 
             when (val refreshResult = repository.refreshNews()) {
                 is Resource.Success -> {
-                    // Possibly after refreshing, call fetchAndStoreNewsList
                     when (val fetchResult = repository.fetchAndStoreNewsList()) {
                         is Resource.Success -> {
                             _newsState.value = fetchResult.data ?: emptyList()
                         }
+
                         is Resource.Error -> {
                             _error.value = fetchResult.message
                         }
                     }
                 }
+
                 is Resource.Error -> {
                     _error.value = refreshResult.message
                 }
@@ -74,8 +96,8 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    // Example: check news status
     fun checkNewsStatus(dateString: String) {
+        Log.d("NewsViewModel", "checkNewsStatus called with dateString: $dateString")
         viewModelScope.launch {
             _loading.value = true
             _error.value = null
@@ -85,13 +107,11 @@ class NewsViewModel @Inject constructor(
                 is Resource.Success -> {
                     // If successful (200 OK, etc.), maybe do nothing
                 }
+
                 is Resource.Error -> {
-                    // Check if the server responded 304
                     if (result.httpCode == 304) {
-                        // If 304, we can auto-refresh or prompt the user, etc.
                         autoRefreshNews()
                     } else {
-                        // Other errors: show them in the UI
                         _error.value = result.message
                     }
                 }
@@ -101,23 +121,20 @@ class NewsViewModel @Inject constructor(
     }
 
     private fun autoRefreshNews() {
+        Log.d("NewsViewModel", "autoRefreshNews called")
         viewModelScope.launch {
-            // 1) Call refresh
             val refreshResult = repository.refreshNews()
             if (refreshResult is Resource.Error) {
                 _error.value = refreshResult.message
                 return@launch
             }
 
-            // 2) After refreshing, fetch and store the new list
             val fetchResult = repository.fetchAndStoreNewsList()
             if (fetchResult is Resource.Error) {
                 _error.value = fetchResult.message
                 return@launch
             }
 
-            // 3) Finally, update local data
-            //    e.g., reload from DB or set _newsState.value directly
             val localResult = repository.getLocalNews()
             if (localResult is Resource.Success) {
                 _newsState.value = localResult.data ?: emptyList()
@@ -126,8 +143,9 @@ class NewsViewModel @Inject constructor(
             }
         }
     }
-    // Example: cleanup old news
+
     fun cleanupOldNews(beforeDate: String) {
+        Log.d("NewsViewModel", "cleanupOldNews called with beforeDate: $beforeDate")
         viewModelScope.launch {
             _loading.value = true
             _error.value = null
@@ -136,7 +154,6 @@ class NewsViewModel @Inject constructor(
             if (result is Resource.Error) {
                 _error.value = result.message
             } else {
-                // Optionally reload local news
                 loadLocalNews()
             }
 

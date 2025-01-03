@@ -1,5 +1,6 @@
 package com.medtek.main.data.local.dao
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -36,6 +37,11 @@ interface UserDao {
         if (!currentHistory.contains(ritualId)) {
             currentHistory.add(ritualId)
             updateRitualsHistory(userId, currentHistory)
+        } else {
+            Log.d(
+                "UserDao",
+                "insertPlan: Ritual ID $ritualId already exists in ritualsHistory for user $userId"
+            )
         }
     }
 

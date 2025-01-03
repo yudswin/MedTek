@@ -8,6 +8,8 @@ import com.medtek.main.data.repository.greeting.QuoteRepository
 import com.medtek.main.data.repository.greeting.QuoteRepositoryImpl
 import com.medtek.main.data.repository.greeting.WeatherRepository
 import com.medtek.main.data.repository.greeting.WeatherRepositoryImpl
+import com.medtek.main.data.repository.news.NewsRepository
+import com.medtek.main.data.repository.news.NewsRepositoryImpl
 import com.medtek.main.data.repository.survey.AuthRepository
 import com.medtek.main.data.repository.survey.AuthRepositoryImpl
 import com.medtek.main.data.repository.survey.FieldRepository
@@ -57,4 +59,10 @@ abstract class RepositoryModule {
     abstract fun bindHabitRepository(
         impl: HabitRepositoryImpl
     ): HabitRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNewsRepository(
+        impl: NewsRepositoryImpl
+    ): NewsRepository
 }
