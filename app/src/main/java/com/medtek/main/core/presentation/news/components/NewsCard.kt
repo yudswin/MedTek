@@ -1,33 +1,36 @@
 package com.medtek.main.core.presentation.news.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.medtek.main.data.local.entities.News
 
-@Preview
 @Composable
-fun NewsCard() {
-    Box(
+fun NewsCard(news: News) {
+    Card(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.primary)
-            .border(1.dp, MaterialTheme.colorScheme.primaryContainer)
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center,
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = MaterialTheme.shapes.medium,
     ) {
-        Text(
-            text = "News Card",
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(64.dp),
-            color = MaterialTheme.colorScheme.onPrimary
-        )
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = news.title,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = news.content,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
     }
 }

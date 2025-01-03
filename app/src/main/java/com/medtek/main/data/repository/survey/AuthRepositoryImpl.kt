@@ -26,7 +26,7 @@ class AuthRepositoryImpl @Inject constructor(
             return Resource.Error("Error signIn to server: ${e.message}")
         }
 
-        val storedResponse = try {
+        try {
             val user = User(
                 id = response!!.userId,
                 email = request.email,

@@ -11,7 +11,6 @@ import com.medtek.main.data.local.entities.Plan
 import com.medtek.main.data.local.entities.Survey
 import com.medtek.main.data.remote.services.UserService
 import com.medtek.main.utilties.Resource
-import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -226,23 +225,32 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun hasCurrentWeekPlan(userId: String): Resource<Boolean> {
+        if (userId.isBlank()) {
+            Log.e("UserRepositoryImpl", "hasCurrentWeekPlan: User ID is null or blank")
+            return Resource.Error("User ID cannot be null or blank")
+        }
+
         Log.d(
             "UserRepositoryImpl",
             "hasCurrentWeekPlan: Checking if user $userId has a plan for the current week started"
         )
         return try {
             val currentDate = LocalDate.now()
-            val startOfWeek = currentDate.with(DayOfWeek.MONDAY)
-            val endOfWeek = currentDate.with(DayOfWeek.SUNDAY)
-
             val planIds = dao.getRitualsHistory(userId) ?: emptyList()
             if (planIds.isEmpty()) {
                 Log.d("UserRepositoryImpl", "hasCurrentWeekPlan: No plans found for user $userId")
                 return Resource.Success(false)
             }
 
-            val hasPlan = planIds.any { planId ->
-                planDao.hasPlanBetweenDates(planId, startOfWeek.toString(), endOfWeek.toString())
+            val listDate = mutableListOf<String>()
+            planIds.forEach { planId ->
+                dayPlanDao.getAllDayPlanDatesByPlanId(planId).forEach { date ->
+                    listDate.add(date)
+                }
+            }
+
+            val hasPlan = listDate.any { date ->
+                currentDate == LocalDate.parse(date)
             }
 
             Log.d(

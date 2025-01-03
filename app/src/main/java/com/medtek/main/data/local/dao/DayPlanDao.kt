@@ -16,4 +16,7 @@ interface DayPlanDao {
 
     @Query("SELECT * FROM day_plans WHERE userId = :userId")
     suspend fun getAllDayPlansByUserId(userId: String): List<DayPlan>
+
+    @Query("SELECT date FROM day_plans WHERE planId = :planId")
+    suspend fun getAllDayPlanDatesByPlanId(planId: String): List<String>
 }

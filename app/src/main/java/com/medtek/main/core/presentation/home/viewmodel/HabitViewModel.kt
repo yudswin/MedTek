@@ -25,7 +25,10 @@ class HabitViewModel @Inject constructor(
 
     private val _userId = mutableStateOf<String?>(null)
     val userId: State<String?> = _userId
-    
+
+    init {
+        getUserId()
+    }
 
     fun getUserId() {
         viewModelScope.launch {

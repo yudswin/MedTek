@@ -9,12 +9,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.medtek.main.core.presentation.news.NewsViewModel
 import com.medtek.main.core.presentation.calendar.CalendarScreen
 import com.medtek.main.core.presentation.home.HabitScreen
 import com.medtek.main.core.presentation.home.viewmodel.HabitViewModel
 import com.medtek.main.core.presentation.music.MusicScreen
 import com.medtek.main.core.presentation.news.NewsScreen
-import com.medtek.main.core.presentation.news.WeatherViewModel
+
 
 @Composable
 fun BottomNavGraph(
@@ -28,8 +29,8 @@ fun BottomNavGraph(
         navController = navController,
         startDestination = BottomNavItem.Habit.route
     ) {
-        composable(route = BottomNavItem.Habit.route) { backStackEntry ->
-            val habitViewModel: HabitViewModel = hiltViewModel(backStackEntry)
+        composable(route = BottomNavItem.Habit.route) {
+            val habitViewModel: HabitViewModel = hiltViewModel()
             HabitScreen(
                 initialPage = initPage,
                 viewModel = habitViewModel,
@@ -40,8 +41,8 @@ fun BottomNavGraph(
         composable(route = BottomNavItem.Calendar.route) {
             CalendarScreen()
         }
-        composable(route = BottomNavItem.News.route) { backStackEntry ->
-            val viewModel: WeatherViewModel = hiltViewModel(backStackEntry)
+        composable(route = BottomNavItem.News.route) {
+            val viewModel: NewsViewModel = hiltViewModel()
             NewsScreen(navController = navController, viewModel = viewModel)
         }
         composable(route = BottomNavItem.Music.route) {

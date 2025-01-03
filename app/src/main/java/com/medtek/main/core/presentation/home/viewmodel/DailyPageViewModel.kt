@@ -39,10 +39,11 @@ class DailyPageViewModel @Inject constructor(
     val updateProgressState: State<Resource<Unit>?> = _updateProgressState
 
     init {
+        Log.d("DailyPageViewModel", "Initializing DailyPageViewModel")
         getUserId()
+
     }
 
-    // Init
     private val _weekScheduled = mutableStateOf<Map<LocalDate, List<Habit>>>(
         mapOf(
             LocalDate.now().minusDays(3) to emptyList<Habit>(),
@@ -82,6 +83,7 @@ class DailyPageViewModel @Inject constructor(
     val weekProgress: State<Map<LocalDate, Float>> = _weekProgress
 
     fun calculateProgressForWeek() {
+        Log.d("DailyPageViewModel", "Calculating progress for the week")
         val progressMap = mutableMapOf<LocalDate, Float>()
         _weekScheduled.value.forEach { (date, habits) ->
             if (habits.isNotEmpty()) {
@@ -97,6 +99,7 @@ class DailyPageViewModel @Inject constructor(
             }
         }
         _weekProgress.value = progressMap
+        Log.d("DailyPageViewModel", "Week progress calculated: $progressMap")
     }
 
     private val _habitsLoadingState = mutableStateOf<Map<LocalDate, Boolean>>(
@@ -112,8 +115,8 @@ class DailyPageViewModel @Inject constructor(
     )
     val habitsLoadingState: State<Map<LocalDate, Boolean>> = _habitsLoadingState
 
-
     fun loadScheduled() {
+        Log.d("DailyPageViewModel", "Loading scheduled habits")
         viewModelScope.launch {
             _loadingState.value = true
             _errorState.value = null
@@ -128,7 +131,7 @@ class DailyPageViewModel @Inject constructor(
                             val habits = habitRepository.getHabitsByDayPlanId(dayPlanId)
                             weekScheduledMap[date] = habits.data as List<Habit>
                         } catch (e: Exception) {
-                            Log.e("HabitViewModel", "Error fetching habits for day $date", e)
+                            Log.e("DailyPageViewModel", "Error fetching habits for day $date", e)
                             weekScheduledMap[date] = emptyList()
                         }
                     } else {
@@ -143,15 +146,16 @@ class DailyPageViewModel @Inject constructor(
                 calculateProgressForWeek()
             } catch (e: Exception) {
                 _errorState.value = e.message
-                Log.e("HabitViewModel", "Error loading scheduled habits", e)
+                Log.e("DailyPageViewModel", "Error loading scheduled habits", e)
             } finally {
                 _loadingState.value = false
+                Log.d("DailyPageViewModel", "Scheduled habits loaded")
             }
         }
     }
 
-
     fun loadWeekPlan() {
+        Log.d("DailyPageViewModel", "Loading week plan")
         viewModelScope.launch {
             _loadingState.value = true
             _errorState.value = null
@@ -166,32 +170,35 @@ class DailyPageViewModel @Inject constructor(
                         if (weekPlanMap != null) {
                             _weekPlan.value = weekPlanMap
                         }
+                        Log.d("DailyPageViewModel", "Week plan loaded: $weekPlanMap")
                     }
 
                     is Resource.Error -> {
                         _errorState.value = result.message
-                        Log.e("HabitViewModel", "Error fetching day plans: ${result.message}")
+                        Log.e("DailyPageViewModel", "Error fetching day plans: ${result.message}")
                     }
                 }
             } catch (e: Exception) {
                 _errorState.value = e.message
-                Log.e("HabitViewModel", "Error loading week plan", e)
+                Log.e("DailyPageViewModel", "Error loading week plan", e)
             } finally {
                 _loadingState.value = false
+                Log.d("DailyPageViewModel", "Week plan loading completed")
             }
         }
     }
 
     fun getUserId() {
+        Log.d("DailyPageViewModel", "Getting user ID")
         viewModelScope.launch {
             _loadingState.value = true
             _errorState.value = null
-            Log.d("DailyPageViewModel", "Getting user ID")
             try {
                 userRepo.getUserId().also {
                     if (it is Resource.Success) {
                         _userId.value = it.data
                         loadDayPlans()
+                        loadScheduled()
                         Log.d("DailyPageViewModel", "User ID fetched successfully: ${it.data}")
                     } else if (it is Resource.Error) {
                         _errorState.value = it.message
@@ -209,10 +216,10 @@ class DailyPageViewModel @Inject constructor(
     }
 
     fun loadDayPlans() {
+        Log.d("DailyPageViewModel", "Loading day plans")
         viewModelScope.launch {
             _loadingState.value = true
             _errorState.value = null
-            Log.d("DailyPageViewModel", "Loading day plans")
             val response = try {
                 if (_userId.value == null) {
                     userRepo.getUserId().also {
@@ -247,11 +254,11 @@ class DailyPageViewModel @Inject constructor(
     }
 
     fun getHabitsForDate(date: String): List<Habit> {
+        Log.d("DailyPageViewModel", "Getting habits for date: $date")
         var habits = emptyList<Habit>()
         viewModelScope.launch {
             _loadingState.value = true
             _errorState.value = null
-            Log.d("DailyPageViewModel", "Loading habits for date: $date")
             val response = try {
                 habitRepository.getDayPlansByDate(date)
             } catch (e: Exception) {
@@ -302,5 +309,4 @@ class DailyPageViewModel @Inject constructor(
             }
         }
     }
-
 }
