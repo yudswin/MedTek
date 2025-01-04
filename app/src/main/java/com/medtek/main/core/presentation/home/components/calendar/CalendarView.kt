@@ -57,12 +57,12 @@ fun CalendarView(
             items(daysInMonth) { day ->
                 val date = yearMonth.atDay(day + 1)
                 val progress = userProgress[date] ?: 0f
+                val isCurrentDay = date == currentDate
                 Box(
-                    modifier = Modifier
-                        .clickable { onDateSelected(date) },
+                    modifier = Modifier.clickable { onDateSelected(date) },
                     contentAlignment = Alignment.Center
                 ) {
-                    CalendarItem(day = day, progress = progress)
+                    CalendarItem(day = day, progress = progress, isCurrentDay = isCurrentDay)
                 }
             }
         }

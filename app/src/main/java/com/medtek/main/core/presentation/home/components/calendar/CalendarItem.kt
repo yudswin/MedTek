@@ -65,14 +65,15 @@ fun CalendarItem(
     backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
     day: Int = (0..30).random(),
     progress: Float = (0..100).random().toFloat() / 100,
-    isSelected: Boolean = false
+    isSelected: Boolean = false,
+    isCurrentDay: Boolean = false
 ) {
     Box(
         modifier = Modifier
             .height(size)
             .width(size)
             .clip(CircleShape)
-            .background(backgroundColor)
+            .background(if (!isCurrentDay) backgroundColor else MaterialTheme.colorScheme.background)
             .padding(4.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -84,12 +85,12 @@ fun CalendarItem(
                 Icon(
                     imageVector = Icons.Default.LocalFireDepartment,
                     contentDescription = "12",
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = if (isCurrentDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(10.dp)
                 )
                 Text(
                     text = "${day + 1}",
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = if (isCurrentDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
                     style = MaterialTheme.typography.labelSmall
                 )
             }
@@ -97,7 +98,7 @@ fun CalendarItem(
 
             Text(
                 text = "${day + 1}",
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = if (isCurrentDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.labelSmall
             )
         }
@@ -105,8 +106,8 @@ fun CalendarItem(
             modifier = Modifier.fillMaxWidth(),
             progress = { progress },
             strokeWidth = 2.dp,
-            color = MaterialTheme.colorScheme.onPrimary,
-            trackColor = MaterialTheme.colorScheme.primaryContainer
+            color = if (isCurrentDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
+            trackColor = if (isCurrentDay) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primaryContainer
         )
     }
 }
@@ -123,7 +124,9 @@ fun PreviewCalendarItem() {
             CalendarItem()
             CalendarItem(progress = 0.2f)
             CalendarItem(progress = 0.5f)
+            CalendarItem(progress = 0.7f, isCurrentDay = true)
             CalendarItem(progress = 0.7f)
+            CalendarItem(progress = 1f, isCurrentDay = true)
             CalendarItem(progress = 1f)
         }
     }
