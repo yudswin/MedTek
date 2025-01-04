@@ -1,12 +1,12 @@
 package com.medtek.main
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.Manifest
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.medtek.main.core.HomeScreen
+import com.medtek.main.core.presentation.music.service.MusicService
 import com.medtek.main.core.presentation.timer.service.FocusSessionService
 import com.medtek.main.greeting.GreetingScreen
 import com.medtek.main.survey.EntryScreen
@@ -33,8 +34,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private var isBound by mutableStateOf(false)
+    private var isBoundMusic by mutableStateOf(false)
+
 
     private lateinit var focusSessionService: FocusSessionService
+    private lateinit var musicService: MusicService
+
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val binder = service as FocusSessionService.FocusSessionBinder
@@ -47,12 +52,27 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val connectionMusic = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            val binder = service as MusicService.MusicBinder
+            musicService = binder.getService()
+            isBoundMusic = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            isBoundMusic = false
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                if (isBound) {
-                    MainNavHost(focusSessionService)
+                if (isBound && isBoundMusic) {
+                    MainNavHost(
+                        focusSessionService = focusSessionService,
+                        musicService = musicService
+                    )
                 }
             }
         }
@@ -63,6 +83,9 @@ class MainActivity : ComponentActivity() {
         super.onStart()
         Intent(this, FocusSessionService::class.java).also { intent ->
             bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        }
+        Intent(this, MusicService::class.java).also { intent ->
+            bindService(intent, connectionMusic, Context.BIND_AUTO_CREATE)
         }
     }
 
@@ -81,12 +104,18 @@ class MainActivity : ComponentActivity() {
         super.onStop()
         unbindService(connection)
         isBound = false
+        unbindService(connectionMusic)
+        isBoundMusic = false
+
     }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MainNavHost(focusSessionService: FocusSessionService) {
+fun MainNavHost(
+    focusSessionService: FocusSessionService,
+    musicService: MusicService
+) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -103,7 +132,9 @@ fun MainNavHost(focusSessionService: FocusSessionService) {
         composable("home") {
             HomeScreen(
                 navController = navController,
-                focusSessionService = focusSessionService
+                focusSessionService = focusSessionService,
+                musicService = musicService
+
             )
         }
 

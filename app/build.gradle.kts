@@ -121,4 +121,8 @@ dependencies {
     // OkHttp Logging Interceptor
     implementation(libs.okhttp.logging.interceptor)
 
+    // ExoPlayer
+    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
+
+
 }

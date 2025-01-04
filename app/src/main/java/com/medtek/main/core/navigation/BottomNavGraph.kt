@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.medtek.main.core.presentation.home.HabitScreen
 import com.medtek.main.core.presentation.home.viewmodel.HabitViewModel
 import com.medtek.main.core.presentation.music.MusicScreen
+import com.medtek.main.core.presentation.music.service.MusicService
 import com.medtek.main.core.presentation.news.NewsScreen
 import com.medtek.main.core.presentation.news.NewsViewModel
 import com.medtek.main.core.presentation.timer.TimerScreen
@@ -23,6 +24,7 @@ import com.medtek.main.core.presentation.timer.service.FocusSessionService
 @Composable
 fun BottomNavGraph(
     focusSessionService: FocusSessionService,
+    musicService: MusicService,
     outterNavController: NavController,
     navController: NavHostController,
     paddingValues: PaddingValues,
@@ -50,7 +52,7 @@ fun BottomNavGraph(
             TimerScreen(focusSessionService)
         }
         composable(route = BottomNavItem.Music.route) {
-            MusicScreen()
+            MusicScreen(musicService)
         }
     }
 }

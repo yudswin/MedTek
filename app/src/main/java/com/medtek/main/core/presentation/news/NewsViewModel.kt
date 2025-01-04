@@ -55,7 +55,8 @@ class NewsViewModel @Inject constructor(
 
             when (val result = repository.getLocalNews()) {
                 is Resource.Success -> {
-                    _newsState.value = result.data ?: emptyList()
+                    val uniqueNews = clearDuplicatedNews(result.data ?: emptyList())
+                    _newsState.value = uniqueNews
                 }
 
                 is Resource.Error -> {
@@ -142,6 +143,10 @@ class NewsViewModel @Inject constructor(
                 _error.value = localResult.message
             }
         }
+    }
+
+    private fun clearDuplicatedNews(newsList: List<News>): List<News> {
+        return newsList.distinctBy { it.title }
     }
 
     fun cleanupOldNews(beforeDate: String) {

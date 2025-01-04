@@ -18,6 +18,11 @@
             android:name=".core.presentation.timer.service.FocusSessionService"
             android:enabled="true"
             android:exported="false" />
+        <service
+            android:name=".core.presentation.music.service.MusicService"
+            android:enabled="true"
+            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

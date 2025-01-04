@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.medtek.main.core.navigation.BottomNavBar
 import com.medtek.main.core.navigation.BottomNavGraph
+import com.medtek.main.core.presentation.music.service.MusicService
 import com.medtek.main.core.presentation.timer.service.FocusSessionService
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -17,6 +18,7 @@ import com.medtek.main.core.presentation.timer.service.FocusSessionService
 fun HomeScreen(
     navController: NavHostController,
     focusSessionService: FocusSessionService,
+    musicService: MusicService,
     initPage: Int = 0,
 ) {
     val innerNavController = rememberNavController()
@@ -29,6 +31,7 @@ fun HomeScreen(
             navController = innerNavController,
             paddingValues = innerPadding,
             focusSessionService = focusSessionService,
+            musicService = musicService,
             initPage = initPage
         )
     }
