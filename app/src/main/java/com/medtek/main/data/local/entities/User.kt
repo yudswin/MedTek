@@ -12,7 +12,9 @@ data class User(
     val notificationHistory: List<String>? = null,
     val ritualsOverview: Rituals? = null,
     val city: String? = null,
-    val isPriorityUser: Boolean? = null
+    val isPriorityUser: Boolean? = null,
+    val currentStreak: Int = 0,
+    val longestStreak: Int = 0,
 )
 
 

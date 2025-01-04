@@ -9,6 +9,7 @@ import com.medtek.main.data.local.entities.DayPlan
 import com.medtek.main.data.local.entities.Habit
 import com.medtek.main.data.local.entities.Plan
 import com.medtek.main.data.local.entities.Survey
+import com.medtek.main.data.local.entities.User
 import com.medtek.main.data.remote.services.UserService
 import com.medtek.main.utilties.Resource
 import java.time.LocalDate
@@ -264,6 +265,38 @@ class UserRepositoryImpl @Inject constructor(
                 "hasCurrentWeekPlan: Error checking current week plan - ${e.message}"
             )
             Resource.Error("Error checking current week plan: ${e.message}")
+        }
+    }
+
+    override suspend fun getUserById(userId: String): Resource<User> {
+        return try {
+            val user = dao.getUserById(userId)
+            if (user != null) {
+                Resource.Success(user)
+            } else {
+                Resource.Error("User not found")
+            }
+        } catch (e: Exception) {
+            Resource.Error(e.localizedMessage ?: "An unexpected error occurred")
+        }
+    }
+
+    override suspend fun updateCurrentStreak(userId: String, currentStreak: Int): Resource<Unit> {
+        return try {
+            dao.updateCurrentStreak(userId, currentStreak)
+            dao.updateLongestStreak(userId, currentStreak)
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Resource.Error("Error updating current streak: ${e.message}")
+        }
+    }
+
+    override suspend fun getUserLongestStreak(userId: String): Resource<Int> {
+        return try {
+            val longestStreak = dao.getLongestStreak(userId)
+            Resource.Success(longestStreak)
+        } catch (e: Exception) {
+            Resource.Error("Error fetching longest streak: ${e.message}")
         }
     }
 }

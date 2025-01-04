@@ -31,6 +31,8 @@ fun CalendarScreen() {
     val formatter = DateTimeFormatter.ofPattern("MMMM")
     val formattedDate = currentDate.format(formatter)
     val selectedDate = remember { mutableStateOf(currentDate) }
+    val userProgress = remember { mutableStateOf(mapOf<LocalDate, Float>()) }
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -78,19 +80,16 @@ fun CalendarScreen() {
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
-                CalendarView(currentDate, selectedDate.value) { date ->
-                    selectedDate.value = date
-                }
+                CalendarView(
+                    currentDate = currentDate,
+                    selectedDate = selectedDate.value,
+                    onDateSelected = { date ->
+                        selectedDate.value = date
+                    },
+                    userProgress = userProgress.value
+                )
             }
         }
     }
 }
 
-
-@Preview
-@Composable
-fun PreviewCalendarView() {
-    AppTheme {
-        CalendarScreen()
-    }
-}

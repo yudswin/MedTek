@@ -58,6 +58,17 @@ fun DailyPage(
         }
     }
 
+    LaunchedEffect(pagerState) {
+        viewModel.loadWeekPlan()
+    }
+
+    LaunchedEffect(viewModel.userId) {
+        viewModel.userId.value?.let {
+            viewModel.loadScheduled()
+        }
+    }
+
+
     Scaffold(
         topBar = {
             WeeklyBar(
@@ -144,5 +155,4 @@ fun DailyPage(
         }
     }
 }
-
 

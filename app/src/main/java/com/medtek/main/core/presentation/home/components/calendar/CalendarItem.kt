@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BeachAccess
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,46 +62,56 @@ fun CalendarTitle(
 @Composable
 fun CalendarItem(
     size: Dp = 40.dp,
-    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
     day: Int = (0..30).random(),
     progress: Float = (0..100).random().toFloat() / 100,
-    isSelected: Boolean = false
+    isSelected: Boolean = false,
+    isCurrentDay: Boolean = false
 ) {
     Box(
         modifier = Modifier
             .height(size)
             .width(size)
             .clip(CircleShape)
-            .background(backgroundColor)
+            .background(if (!isCurrentDay) backgroundColor else MaterialTheme.colorScheme.background)
             .padding(4.dp),
         contentAlignment = Alignment.Center
     ) {
-        if (progress >= 100) {
-            Icons.Default.BeachAccess
+        if (progress >= 1.0f) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.LocalFireDepartment,
+                    contentDescription = "12",
+                    tint = if (isCurrentDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(10.dp)
+                )
+                Text(
+                    text = "${day + 1}",
+                    color = if (isCurrentDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
         } else {
-            CircularProgressIndicator(
-                modifier = Modifier.fillMaxWidth(),
-                progress = { progress },
-                strokeWidth = 2.dp,
-                color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary
+
+            Text(
+                text = "${day + 1}",
+                color = if (isCurrentDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.labelSmall
             )
         }
-        Text(
-            text = "${day + 1}",
-            color = MaterialTheme.colorScheme.onPrimary,
-            style = MaterialTheme.typography.labelSmall
+        CircularProgressIndicator(
+            modifier = Modifier.fillMaxWidth(),
+            progress = { progress },
+            strokeWidth = 2.dp,
+            color = if (isCurrentDay) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
+            trackColor = if (isCurrentDay) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primaryContainer
         )
     }
 }
 
-
-@Preview
-@Composable
-fun PreviewCalendarItemEmpty() {
-    AppTheme {
-        CalendarItemEmpty()
-    }
-}
 
 @Preview
 @Composable
@@ -112,7 +124,9 @@ fun PreviewCalendarItem() {
             CalendarItem()
             CalendarItem(progress = 0.2f)
             CalendarItem(progress = 0.5f)
+            CalendarItem(progress = 0.7f, isCurrentDay = true)
             CalendarItem(progress = 0.7f)
+            CalendarItem(progress = 1f, isCurrentDay = true)
             CalendarItem(progress = 1f)
         }
     }

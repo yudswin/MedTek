@@ -31,7 +31,8 @@ import com.medtek.main.ui.theme.AppTheme
 fun InfoGraphic(
     currentStreak: Int = 36,
     longestStreak: Int = 7,
-    totalHabits: Int = 108
+    totalHabits: Int = 108,
+    currentProgress: Float = 0.8f
 ) {
     Box(
         modifier = Modifier
@@ -46,7 +47,6 @@ fun InfoGraphic(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Each box occupies 1/3 of the row width
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
@@ -55,7 +55,7 @@ fun InfoGraphic(
                     .padding(horizontal = 8.dp)
             ) {
                 Text(
-                    longestStreak.toString(),
+                    text = totalHabits.toString(),
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onPrimary,
                 )
@@ -67,7 +67,10 @@ fun InfoGraphic(
                 modifier = Modifier
                     .weight(1f) // Ensures equal width
             ) {
-                StreakCanvas()
+                StreakCanvas(
+                    progress = currentProgress,
+                    total = currentStreak
+                )
                 DisplayText("Current Streak")
             }
             Column(
@@ -148,23 +151,5 @@ fun StreakCanvas(
 fun PreviewInfoGraphic() {
     AppTheme {
         InfoGraphic()
-    }
-}
-
-
-@Composable
-fun PreviewComponent() {
-    AppTheme {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.secondary)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        )
-        {
-            StreakCanvas()
-            DisplayText("random")
-        }
     }
 }
