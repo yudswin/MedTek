@@ -68,7 +68,6 @@ fun MusicScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box()
         Text(
             text = if (isPlaying.value) "Now Playing: Track ${currentTrackIndex.value + 1}" else "Stopped",
             style = MaterialTheme.typography.headlineSmall
