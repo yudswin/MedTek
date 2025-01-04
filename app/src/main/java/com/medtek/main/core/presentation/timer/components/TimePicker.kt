@@ -1,4 +1,4 @@
-package com.medtek.main.survey.presentation.pages
+package com.medtek.main.core.presentation.timer.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
@@ -19,34 +18,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.medtek.main.ui.theme.AppTheme
-
-@Composable
-fun TestPage() {
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            MinutesPicker(
-                minutes = 120,
-                onMinutesChange = {},
-            )
-        }
-    }
-}
 
 
 @Composable
-fun MinutesPicker(
+fun TimePicker(
     minutes: Int = 120,
     onMinutesChange: (Int) -> Unit,
 ) {
@@ -113,14 +89,5 @@ fun MinutesPicker(
                 )
             }
         }
-    }
-}
-
-
-@Composable
-@Preview
-fun PreviewPage() {
-    AppTheme {
-        TestPage()
     }
 }

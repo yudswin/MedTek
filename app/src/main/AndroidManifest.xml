@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".MedTekApp"
@@ -12,7 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedTek">
-        <activity android:name=".core.HomeActivity" />
+        <service
+            android:name=".core.presentation.timer.service.FocusSessionService"
+            android:enabled="true"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

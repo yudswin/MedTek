@@ -1,5 +1,6 @@
 package com.medtek.main.core
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -9,10 +10,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.medtek.main.core.navigation.BottomNavBar
 import com.medtek.main.core.navigation.BottomNavGraph
+import com.medtek.main.core.presentation.timer.service.FocusSessionService
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
     navController: NavHostController,
+    focusSessionService: FocusSessionService,
     initPage: Int = 0,
 ) {
     val innerNavController = rememberNavController()
@@ -24,7 +28,8 @@ fun HomeScreen(
             outterNavController = navController,
             navController = innerNavController,
             paddingValues = innerPadding,
-            initPage
+            focusSessionService = focusSessionService,
+            initPage = initPage
         )
     }
 }

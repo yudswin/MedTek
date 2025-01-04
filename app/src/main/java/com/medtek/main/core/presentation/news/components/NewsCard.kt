@@ -27,6 +27,16 @@ fun NewsCard(news: News) {
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
+                text = "By ${news.author} - ${news.date}",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+            Text(
+                text = "Source: ${news.sourceName}",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+            Text(
                 text = news.content,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(top = 8.dp)

@@ -63,7 +63,7 @@ fun NewsScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(newsState.value) { news ->
-                            NewsCard(news = news)
+                            if (news.content != "[Removed]") NewsCard(news = news)
                         }
                     }
                 }

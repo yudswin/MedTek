@@ -1,10 +1,10 @@
 package com.medtek.main.core.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Newspaper
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomNavItem(
@@ -18,16 +18,16 @@ sealed class BottomNavItem(
         icon = Icons.Default.Home
     )
 
-    object Calendar : BottomNavItem(
-        route = "calendar",
-        title = "Calendar",
-        icon = Icons.Default.CalendarMonth
-    )
-
     object News : BottomNavItem(
         route = "news",
         title = "News",
         icon = Icons.Default.Newspaper
+    )
+
+    object Timer : BottomNavItem(
+        route = "timer",
+        title = "Timer",
+        icon = Icons.Default.Timer
     )
 
     object Music : BottomNavItem(

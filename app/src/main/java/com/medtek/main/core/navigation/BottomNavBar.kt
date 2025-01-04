@@ -19,8 +19,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 fun BottomNavBar(navController: NavHostController) {
     val screens = listOf(
         BottomNavItem.Habit,
-        BottomNavItem.Calendar,
         BottomNavItem.News,
+        BottomNavItem.Timer,
         BottomNavItem.Music
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
