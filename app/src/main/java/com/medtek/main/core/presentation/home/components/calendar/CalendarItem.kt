@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BeachAccess
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,7 +62,7 @@ fun CalendarTitle(
 @Composable
 fun CalendarItem(
     size: Dp = 40.dp,
-    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = MaterialTheme.colorScheme.primaryContainer,
     day: Int = (0..30).random(),
     progress: Float = (0..100).random().toFloat() / 100,
     isSelected: Boolean = false
@@ -74,32 +76,41 @@ fun CalendarItem(
             .padding(4.dp),
         contentAlignment = Alignment.Center
     ) {
-        if (progress >= 100) {
-            Icons.Default.BeachAccess
+        if (progress >= 1.0f) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.LocalFireDepartment,
+                    contentDescription = "12",
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(10.dp)
+                )
+                Text(
+                    text = "${day + 1}",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
         } else {
-            CircularProgressIndicator(
-                modifier = Modifier.fillMaxWidth(),
-                progress = { progress },
-                strokeWidth = 2.dp,
-                color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimary
+
+            Text(
+                text = "${day + 1}",
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.labelSmall
             )
         }
-        Text(
-            text = "${day + 1}",
+        CircularProgressIndicator(
+            modifier = Modifier.fillMaxWidth(),
+            progress = { progress },
+            strokeWidth = 2.dp,
             color = MaterialTheme.colorScheme.onPrimary,
-            style = MaterialTheme.typography.labelSmall
+            trackColor = MaterialTheme.colorScheme.primaryContainer
         )
     }
 }
 
-
-@Preview
-@Composable
-fun PreviewCalendarItemEmpty() {
-    AppTheme {
-        CalendarItemEmpty()
-    }
-}
 
 @Preview
 @Composable

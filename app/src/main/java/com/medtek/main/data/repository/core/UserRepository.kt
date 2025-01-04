@@ -1,6 +1,7 @@
 package com.medtek.main.data.repository.core
 
 import com.medtek.main.data.local.entities.Survey
+import com.medtek.main.data.local.entities.User
 import com.medtek.main.utilties.Resource
 
 interface UserRepository {
@@ -21,4 +22,10 @@ interface UserRepository {
     suspend fun savePlanResponse(userId: String): Resource<Unit>
 
     suspend fun hasCurrentWeekPlan(userId: String): Resource<Boolean>
+
+    suspend fun getUserById(userId: String): Resource<User>
+
+    suspend fun updateCurrentStreak(userId: String, currentStreak: Int): Resource<Unit>
+
+    suspend fun getUserLongestStreak(userId: String): Resource<Int>
 }

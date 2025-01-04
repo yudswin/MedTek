@@ -16,6 +16,9 @@ interface UserDao {
     @Query("SELECT id FROM user LIMIT 1")
     suspend fun getUserID(): String
 
+    @Query("SELECT * FROM user WHERE id = :userId")
+    suspend fun getUserById(userId: String): User?
+
     @Query("SELECT COUNT(*) FROM user WHERE ritualsHistory IS NOT NULL AND surveyHistory IS NOT NULL AND notificationHistory IS NOT NULL AND ritualsOverview IS NOT NULL")
     suspend fun isUserDoneSurvey(): Boolean
 
@@ -53,5 +56,14 @@ interface UserDao {
 
     @Query("UPDATE user SET ritualsHistory = NULL")
     suspend fun clearAllRitualsHistory()
+
+    @Query("UPDATE user SET currentStreak = :currentStreak WHERE id = :userId")
+    suspend fun updateCurrentStreak(userId: String, currentStreak: Int)
+
+    @Query("SELECT longestStreak FROM user WHERE id = :userId")
+    suspend fun getLongestStreak(userId: String): Int
+
+    @Query("UPDATE user SET longestStreak = CASE WHEN :longestStreak > longestStreak THEN :longestStreak ELSE longestStreak END WHERE id = :userId")
+    suspend fun updateLongestStreak(userId: String, longestStreak: Int?)
 }
 
