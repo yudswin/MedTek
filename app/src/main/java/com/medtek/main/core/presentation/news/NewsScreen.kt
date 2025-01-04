@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.medtek.main.core.presentation.news.components.NewsCard
+import com.medtek.main.utilties.UIState
 
 @Composable
 fun NewsScreen(
@@ -26,8 +27,6 @@ fun NewsScreen(
     viewModel: NewsViewModel = hiltViewModel()
 ) {
     val newsState = viewModel.newsState.collectAsState()
-    val isLoading = viewModel.loading.collectAsState()
-    val error = viewModel.error.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.loadLocalNews()
@@ -39,41 +38,42 @@ fun NewsScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
         ) {
-            when {
-                isLoading.value -> {
+            when (val state = newsState.value) {
+                is UIState.Loading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
-                error.value != null -> {
+                is UIState.Error -> {
                     Text(
-                        text = error.value ?: "Unknown error",
+                        text = state.message,
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
-                newsState.value.isNotEmpty() -> {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(newsState.value) { news ->
-                            NewsCard(news = news)
+                is UIState.Success -> {
+                    if (state.data.isNotEmpty()) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(state.data) { news ->
+                                NewsCard(news = news)
+                            }
                         }
+                    } else {
+                        Text(
+                            text = "No news available.",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
                     }
-                }
-
-                else -> {
-                    Text(
-                        text = "No news available.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
                 }
             }
         }
